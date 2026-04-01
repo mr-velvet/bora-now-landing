@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>bora.now</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #0a0a0a;
+      color: #1a1a1a;
+    }
+
+    /* ── Screen reader only ── */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); border: 0;
+    }
+
+    /* ── Main container ── */
+    main {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    /* ── Slide base ── */
+    .slide {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      color: var(--text, #1a1a1a);
+      overflow: hidden;
+      padding: 16px;
+    }
+    .slide-frame {
+      background: var(--bg, #f0ede6);
+      border-radius: 12px;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .slide-inner {
+      width: 100%;
+      max-width: none;
+      margin: 0 auto;
+      padding: 60px 8vw;
+    }
+
+    /* ── Typography ── */
+    .eyebrow {
+      font-size: clamp(11px, 0.9vw, 13px);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+    .hero-title {
+      font-size: clamp(56px, 9vw, 120px);
+      font-weight: 700;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      margin-bottom: 28px;
+    }
+    .hero-title .line {
+      display: block;
+    }
+    .hero-desc {
+      font-size: clamp(16px, 1.3vw, 19px);
+      line-height: 1.6;
+      color: var(--text-secondary);
+      max-width: 500px;
+      margin-bottom: 44px;
+    }
+    .section-title {
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -0.025em;
+      margin-bottom: 48px;
+    }
+    .statement-text {
+      font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      font-size: clamp(36px, 6.5vw, 90px);
+      font-weight: 400;
+      line-height: 1.18;
+      letter-spacing: -0.02em;
+      width: 100%;
+      position: relative;
+    }
+    .statement-text .word {
+      display: inline-block;
+      overflow: hidden;
+      margin-right: 0.22em;
+      vertical-align: top;
+    }
+    .statement-text .word-inner {
+      display: inline-block;
+    }
+
+    /* ── Typing cursor ── */
+    .typing-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 0.9em;
+      background: var(--text, #f0ede6);
+      margin-left: 4px;
+      vertical-align: text-bottom;
+      animation: cursorBlink 0.7s steps(1) infinite;
+    }
+    @keyframes cursorBlink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    /* ── Word highlight (selection effect) ── */
+    .statement-text .word-highlight {
+      position: relative;
+    }
+    .statement-text .word-highlight .highlight-bg {
+      position: absolute;
+      inset: -2px -4px;
+      background: rgba(255, 255, 255, 0.18);
+      border-radius: 4px;
+      transform: scaleX(0);
+      transform-origin: left;
+    }
+    [data-theme="light"] .statement-text .word-highlight .highlight-bg,
+    .slide--statement[style*="--bg: #f0ede6"] .word-highlight .highlight-bg {
+      background: rgba(26, 26, 26, 0.12);
+    }
+
+    /* ── Statement emoji ── */
+    .statement-emoji {
+      display: inline-block;
+      font-style: normal;
+      margin-left: 0.08em;
+      opacity: 0;
+      transform: scale(0.5);
+    }
+
+    /* ── CTA Button ── */
+    .cta-btn {
+      display: inline-block;
+      padding: 14px 36px;
+      background: var(--text);
+      color: var(--bg);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 100px;
+      letter-spacing: 0.02em;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+    .cta-btn:hover {
+      transform: scale(1.05);
+      opacity: 0.85;
+    }
+
+    /* ── Hero (with topbar) ── */
+    .hero-inner {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      padding-top: 80px;
+      height: 100%;
+    }
+    .hero-topbar {
+      position: absolute;
+      top: 24px;
+      left: 8vw;
+      right: 8vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    /* ── Statement ── */
+    .statement-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: left;
+      height: 100%;
+      padding: 14vh 6vw;
+    }
+
+    /* ── Section Divider (centered, legacy) ── */
+    .divider-inner {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .divider-number {
+      font-size: clamp(72px, 14vw, 180px);
+      font-weight: 800;
+      line-height: 1;
+      opacity: 0.12;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .divider-title {
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+    .divider-title .word {
+      display: inline-block;
+      overflow: hidden;
+      margin-right: 0.22em;
+      vertical-align: top;
+    }
+    .divider-title .word-inner {
+      display: inline-block;
+    }
+    .divider-subtitle {
+      font-size: clamp(15px, 1.2vw, 18px);
+      color: var(--text-secondary);
+      max-width: 440px;
+      line-height: 1.5;
+    }
+
+    /* ── Step Divider (title top-left, giant number bottom-right) ── */
+    .step-inner {
+      position: relative;
+      height: 100%;
+      width: 100%;
+      padding: 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+    .step-title {
+      font-size: clamp(48px, 8vw, 110px);
+      font-weight: 500;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      position: absolute;
+      top: 12%;
+      left: 8%;
+    }
+    .step-title .line {
+      display: block;
+    }
+    .step-number {
+      font-size: clamp(160px, 45vh, 500px);
+      font-weight: 800;
+      line-height: 0.85;
+      opacity: 1;
+      letter-spacing: -0.04em;
+      position: absolute;
+      bottom: -8%;
+      right: -2%;
+    }
+
+    /* ── Insights Split (title left, items right with colored bg) ── */
+    .split-inner {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      padding: 0;
+      max-width: none;
+      height: 100%;
+    }
+    .split-left {
+      flex: 0 0 42%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 56px;
+      background: #f0ede6;
+    }
+    .split-title {
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      font-style: italic;
+    }
+    .split-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 60px 56px;
+      gap: 48px;
+    }
+    .split-insight-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    /* ── Insights shared ── */
+    .insight-dot {
+      width: 12px;
+      height: 12px;
+      min-width: 12px;
+      border-radius: 50%;
+      background: var(--text);
+      margin-top: 5px;
+    }
+    .insight-heading {
+      font-size: clamp(18px, 1.8vw, 26px);
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .insight-text {
+      font-size: clamp(14px, 1.2vw, 18px);
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+    .insights-inner {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .insights-list {
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+    .insight-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    /* ── Chat Statement (diagonal layout) ── */
+    .cs-inner {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      padding: 8vh 6vw;
+      position: relative;
+      overflow: hidden;
+    }
+    .cs-text-area {
+      max-width: 65%;
+      align-self: flex-start;
+    }
+    .cs-title {
+      font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      font-size: clamp(36px, 5.5vw, 80px);
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+    .cs-subtitle {
+      font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      font-size: clamp(14px, 1.6vw, 22px);
+      font-weight: 400;
+      color: var(--text-secondary);
+      margin-top: 2.5vh;
+      display: flex;
+      align-items: center;
+      gap: 0.4em;
+    }
+    .cs-icon {
+      display: inline-flex;
+      align-items: center;
+      font-size: 1.2em;
+      vertical-align: middle;
+    }
+    .cs-icon-muted {
+      opacity: 0.35;
+    }
+    .cs-chat-area {
+      align-self: flex-end;
+      max-width: 50%;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(10px, 1.5vh, 18px);
+      align-items: flex-end;
+    }
+    .cs-bubble {
+      padding: clamp(14px, 1.8vh, 22px) clamp(18px, 2vw, 28px);
+      border-radius: 20px;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: clamp(15px, 1.4vw, 22px);
+      line-height: 1.45;
+      opacity: 0;
+      transform: translateY(20px);
+      max-width: 100%;
+    }
+    .cs-bubble.user {
+      align-self: flex-end;
+      background: var(--text, #1a1a1a);
+      color: var(--bg, #f0ede6);
+      border-bottom-right-radius: 6px;
+    }
+    .cs-bubble.bot {
+      align-self: flex-start;
+      background: rgba(26,26,26,0.07);
+      color: var(--text, #1a1a1a);
+      border-bottom-left-radius: 6px;
+    }
+    .cs-bubble.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .cs-typing {
+      align-self: flex-start;
+      display: flex;
+      gap: 5px;
+      padding: 14px 18px;
+      background: rgba(26,26,26,0.07);
+      border-radius: 20px;
+      border-bottom-left-radius: 6px;
+    }
+    .cs-typing span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(26,26,26,0.35);
+      animation: typingDot 1.2s infinite ease-in-out;
+    }
+    .cs-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .cs-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+    /* ── Two Cards ── */
+    .twocards-inner {
+      display: flex;
+      align-items: stretch;
+      gap: 24px;
+      max-width: none;
+      height: 92%;
+    }
+    .card {
+      flex: 1;
+      background: transparent;
+      border: 1px solid rgba(26,26,26,0.12);
+      border-radius: 20px;
+      padding: 40px 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .card-text {
+      font-size: clamp(24px, 3vw, 40px);
+      font-weight: 500;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+    .card-right {
+      border: 1px solid rgba(26,26,26,0.12);
+      padding: 0;
+      overflow: hidden;
+    }
+    .card-icons {
+      display: flex;
+      gap: 16px;
+      padding: 20px 32px;
+      color: var(--text-secondary);
+    }
+    .card-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(26,26,26,0.06);
+      transition: background 0.2s ease;
+    }
+    .card-icon:hover {
+      background: rgba(26,26,26,0.12);
+    }
+    .card-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    /* ── Chat Mockup ── */
+    .chat-mockup {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(26,26,26,0.08);
+    }
+    .chat-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #1a1a1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #f0ede6;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .chat-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .chat-status {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+    .chat-messages {
+      flex: 1;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow: hidden;
+    }
+    .chat-bubble {
+      max-width: 90%;
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: clamp(14px, 1.1vw, 17px);
+      line-height: 1.5;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .chat-bubble.user {
+      align-self: flex-end;
+      background: #1a1a1a;
+      color: #f0ede6;
+      border-bottom-right-radius: 4px;
+    }
+    .chat-bubble.bot {
+      align-self: flex-start;
+      background: rgba(26,26,26,0.06);
+      color: #1a1a1a;
+      border-bottom-left-radius: 4px;
+    }
+    .chat-bubble.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── CTA Form ── */
+    .cta-inner {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .cta-title {
+      font-size: clamp(48px, 8vw, 110px);
+      font-weight: 700;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+    .cta-title .line {
+      display: block;
+    }
+    .cta-brand {
+      font-size: clamp(40px, 7vw, 100px);
+      font-weight: 300;
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+      letter-spacing: -0.02em;
+    }
+    .cta-email-form {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      max-width: min(600px, 50vw);
+    }
+    .cta-input {
+      flex: 1;
+      padding: 16px 20px;
+      border: 2px solid rgba(26,26,26,0.15);
+      border-radius: 12px;
+      background: transparent;
+      font-family: inherit;
+      font-size: clamp(16px, 1.1vw, 18px);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .cta-input::placeholder {
+      color: var(--text-secondary);
+    }
+    .cta-input:focus {
+      border-color: var(--text);
+    }
+    .cta-submit {
+      padding: 16px 32px;
+      background: var(--text);
+      color: var(--bg);
+      border: none;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: clamp(15px, 1.1vw, 18px);
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .cta-submit:hover {
+      transform: scale(1.03);
+      opacity: 0.9;
+    }
+
+    /* ── Metrics Grid ── */
+    .metrics-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 40px;
+      width: 100%;
+      max-width: 900px;
+    }
+    .metric-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .metric-value {
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .metric-label {
+      font-size: clamp(12px, 1vw, 15px);
+      color: var(--text-secondary);
+      max-width: 160px;
+      line-height: 1.4;
+    }
+
+    /* ── Feature Mockup ── */
+    .mockup-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 64px;
+    }
+    .mockup-text {
+      flex: 1;
+      max-width: 420px;
+    }
+    .mockup-desc {
+      font-size: clamp(14px, 1.2vw, 17px);
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .mockup-device {
+      flex: 1;
+      max-width: 520px;
+    }
+    .device-frame {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+    }
+    .device-laptop .device-frame { border-radius: 10px; }
+    .device-phone .device-frame { border-radius: 24px; max-width: 280px; margin: 0 auto; padding: 14px; }
+    .mockup-screen {
+      width: 100%;
+      display: block;
+      border-radius: 6px;
+    }
+
+    /* ── Fullscreen Image ── */
+    .fullscreen-inner {
+      padding: 0;
+      max-width: none;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .fullscreen-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* ── Thank You ── */
+    .thankyou-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .thankyou-inner .hero-desc {
+      text-align: center;
+    }
+
+    /* ── Chat Typing Indicator ── */
+    .chat-typing {
+      align-self: flex-start;
+      display: flex;
+      gap: 4px;
+      padding: 12px 16px;
+      background: rgba(26,26,26,0.06);
+      border-radius: 16px;
+      border-bottom-left-radius: 4px;
+    }
+    .chat-typing span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(26,26,26,0.35);
+      animation: typingDot 1.2s infinite ease-in-out;
+    }
+    .chat-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .chat-typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typingDot {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-4px); opacity: 1; }
+    }
+
+    /* ── Slide counter ── */
+    .slide-counter {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--dot-color, #1a1a1a);
+      opacity: 0.4;
+      z-index: 100;
+      letter-spacing: 0.08em;
+      font-variant-numeric: tabular-nums;
+      transition: color 0.35s ease;
+    }
+
+    /* ── Loading ── */
+    .loading-screen {
+      position: fixed;
+      inset: 0;
+      background: #f0ede6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      font-size: 13px;
+      color: rgba(26,26,26,0.35);
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      transition: opacity 0.4s ease;
+    }
+    .loading-screen.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* ── Video Background Carousel ── */
+    #video-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      background: #0a0a0a;
+    }
+    #video-bg video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1.8s ease;
+    }
+    #video-bg video.active {
+      opacity: 1;
+    }
+
+    /* Slides sit on top of the video layer */
+    main {
+      z-index: 1;
+    }
+    .slide {
+      z-index: 1;
+    }
+    /* Default: slide-frame is opaque, hiding video behind it */
+    .slide-frame {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .slide { padding: 8px; }
+      .slide-inner { padding: 48px 28px; }
+      .hero-topbar { left: 28px; right: 28px; font-size: 10px; }
+      .mockup-inner { flex-direction: column; gap: 36px; }
+      .mockup-text { max-width: 100%; }
+      .mockup-device { max-width: 100%; }
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 28px; }
+      .slide-counter { right: 14px; bottom: 14px; }
+      .split-inner { flex-direction: column; height: 100%; }
+      .split-left { flex: none; padding: 40px 28px; }
+      .split-right { padding: 40px 28px; }
+      .step-title { font-size: clamp(36px, 10vw, 60px); top: 15%; left: 8%; }
+      .step-number { font-size: clamp(120px, 35vh, 300px); bottom: -5%; right: -3%; }
+      .cs-text-area { max-width: 90%; }
+      .cs-chat-area { max-width: 85%; }
+      .twocards-inner { flex-direction: column; height: auto; }
+      .cta-email-form { flex-direction: column; }
+      .chat-bubble { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-screen" id="loader">BORA.NOW</div>
+
+  <!-- Video background carousel (add videos when available) -->
+  <div id="video-bg">
+  </div>
+
+  <main></main>
+
+  <!-- CDN: GSAP only (no ScrollTrigger/Lenis needed for slide-based nav) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/gsap.min.js"></script>
+
+  <script type="module">
+    import { config } from './slides-data.js';
+    import { SlidesEngine } from './engine/core.js';
+    import { VideoBg } from './engine/video-bg.js';
+
+    document.fonts.ready.then(() => {
+      const engine = new SlidesEngine(config);
+      engine.init();
+
+      const videoBgEl = document.getElementById('video-bg');
+      if (videoBgEl && videoBgEl.querySelectorAll('video').length > 0) {
+        const videoBg = new VideoBg(videoBgEl);
+        videoBg.init();
+      }
+
+      const loader = document.getElementById('loader');
+      setTimeout(() => {
+        loader.classList.add('hide');
+        setTimeout(() => loader.remove(), 400);
+      }, 200);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "name": "bora-now-landing",
+  "port": 5019,
+  "database": false,
+  "logto": false,
+  "env": {}
+}
