@@ -1,6 +1,6 @@
 {
-  "name": "bora-now-landing",
-  "port": 5019,
+  "name": "boranow",
+  "port": 5020,
   "database": false,
   "logto": false,
   "env": {}
