@@ -776,13 +776,13 @@
     .loading-screen {
       position: fixed;
       inset: 0;
-      background: #f0ede6;
+      background: #0a0a0a;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 9999;
       font-size: 13px;
-      color: rgba(26,26,26,0.35);
+      color: rgba(240,237,230,0.35);
       font-weight: 500;
       letter-spacing: 0.06em;
       transition: opacity 0.4s ease;
@@ -807,7 +807,7 @@
       height: 100%;
       object-fit: cover;
       opacity: 0;
-      transition: opacity 1.8s ease;
+      transition: opacity 0.1s ease;
     }
     #video-bg video.active {
       opacity: 1;
@@ -824,6 +824,105 @@
     .slide-frame {
       position: relative;
       z-index: 1;
+    }
+
+    /* ── Brand Logo Overlay ── */
+    #brand-logo {
+      position: fixed;
+      bottom: 28px;
+      left: 28px;
+      z-index: 50;
+      pointer-events: none;
+      font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      font-weight: 700;
+      color: #f0ede6;
+      line-height: 0.82;
+      letter-spacing: -0.04em;
+      font-size: clamp(80px, 18vw, 220px);
+      transform-origin: bottom left;
+    }
+    #brand-logo .brand-line {
+      display: block;
+      white-space: nowrap;
+    }
+    #brand-logo .brand-char {
+      display: inline-block;
+      overflow: hidden;
+      vertical-align: bottom;
+    }
+
+    /* ── Consulting label (bottom-right) ── */
+    #consulting-label {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 50;
+      pointer-events: none;
+      font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      font-weight: 400;
+      font-size: clamp(14px, 1.4vw, 20px);
+      color: rgba(240, 237, 230, 0.45);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      overflow: hidden;
+      line-height: 1;
+      padding: 0;
+    }
+    #consulting-inner {
+      display: block;
+      line-height: 1;
+    }
+
+    /* ── Services list (top-right) ── */
+    #services-list {
+      position: fixed;
+      top: 28px;
+      right: 28px;
+      z-index: 50;
+      pointer-events: none;
+      font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      font-weight: 400;
+      color: rgba(240, 237, 230, 0.7);
+      text-align: right;
+      line-height: 1.45;
+    }
+    #services-list .svc-item {
+      display: block;
+      font-size: clamp(14px, 1.8vw, 24px);
+      letter-spacing: 0.01em;
+      overflow: hidden;
+    }
+    #services-list .svc-inner {
+      display: block;
+    }
+
+    /* ── Video-visible slides ── */
+    .slide-frame.video-visible {
+      background: rgba(10, 10, 10, 0.55) !important;
+      backdrop-filter: blur(2px);
+    }
+    .slide-frame.video-visible .hero-title,
+    .slide-frame.video-visible .eyebrow,
+    .slide-frame.video-visible .hero-desc,
+    .slide-frame.video-visible .hero-topbar,
+    .slide-frame.video-visible .cta-title,
+    .slide-frame.video-visible .cta-brand {
+      color: #f0ede6 !important;
+    }
+    .slide-frame.video-visible .cta-input {
+      border-color: rgba(240, 237, 230, 0.3);
+      color: #f0ede6;
+    }
+    .slide-frame.video-visible .cta-input::placeholder {
+      color: rgba(240, 237, 230, 0.5);
+    }
+    .slide-frame.video-visible .cta-submit {
+      background: #f0ede6;
+      color: #1a1a1a;
+    }
+    .slide-frame.video-visible .cta-btn {
+      background: #f0ede6;
+      color: #1a1a1a;
     }
 
     /* ── Responsive ── */
@@ -854,7 +953,42 @@
 
   <!-- Video background carousel (add videos when available) -->
   <div id="video-bg">
+    <video autoplay muted playsinline class="active" preload="auto">
+      <source src="videos-2/processed/aerial-night.mp4" type="video/mp4">
+    </video>
+    <video muted playsinline preload="none">
+      <source src="videos-2/processed/city-rush-hour.mp4" type="video/mp4">
+    </video>
+    <video muted playsinline preload="none">
+      <source src="videos-2/processed/drone-hyperlapse.mp4" type="video/mp4">
+    </video>
+    <video muted playsinline preload="none">
+      <source src="videos-2/processed/la-freeway.mp4" type="video/mp4">
+    </video>
+    <video muted playsinline preload="none">
+      <source src="videos-2/processed/scenic-night-california.mp4" type="video/mp4">
+    </video>
   </div>
+
+  <!-- Consulting label (bottom-right, aligned with bora.now bottom) -->
+  <div id="consulting-label"><span id="consulting-inner">consulting</span></div>
+
+  <!-- Services list (top-right, hidden initially) -->
+  <div id="services-list">
+    <span class="svc-item"><span class="svc-inner">IT Services</span></span>
+    <span class="svc-item"><span class="svc-inner">Creative Direction</span></span>
+    <span class="svc-item"><span class="svc-inner">UX / UI Design</span></span>
+    <span class="svc-item"><span class="svc-inner">Graphic Design</span></span>
+    <span class="svc-item"><span class="svc-inner">Technology</span></span>
+    <span class="svc-item"><span class="svc-inner">Branding</span></span>
+    <span class="svc-item"><span class="svc-inner">Digital Strategy</span></span>
+    <span class="svc-item"><span class="svc-inner">AI Integration</span></span>
+    <span class="svc-item"><span class="svc-inner">Web Development</span></span>
+    <span class="svc-item"><span class="svc-inner">Data & Analytics</span></span>
+  </div>
+
+  <!-- Brand logo overlay — animates from full to abbreviated on scroll -->
+  <div id="brand-logo"><span class="brand-line"><span class="brand-char brand-keep">b</span><span class="brand-char brand-erase">o</span><span class="brand-char brand-erase">r</span><span class="brand-char brand-erase">a</span><span class="brand-char brand-keep">.</span></span><span class="brand-line"><span class="brand-char brand-keep">n</span><span class="brand-char brand-erase">o</span><span class="brand-char brand-erase">w</span><span class="brand-char brand-keep">.</span></span></div>
 
   <main></main>
 
@@ -866,15 +1000,169 @@
     import { SlidesEngine } from './engine/core.js';
     import { VideoBg } from './engine/video-bg.js';
 
-    document.fonts.ready.then(() => {
+    // Start video immediately — don't wait for fonts
+    const videoBgEl = document.getElementById('video-bg');
+    let videoBg;
+    if (videoBgEl && videoBgEl.querySelectorAll('video').length > 0) {
+      videoBg = new VideoBg(videoBgEl);
+      videoBg.init();
+    }
+
+    // Init slides engine once fonts are ready (with 3s timeout fallback)
+    const fontsReady = Promise.race([
+      document.fonts.ready,
+      new Promise(r => setTimeout(r, 3000))
+    ]);
+
+    fontsReady.then(() => {
       const engine = new SlidesEngine(config);
       engine.init();
 
-      const videoBgEl = document.getElementById('video-bg');
-      if (videoBgEl && videoBgEl.querySelectorAll('video').length > 0) {
-        const videoBg = new VideoBg(videoBgEl);
-        videoBg.init();
-      }
+      // Make all slide frames transparent to show video background
+      document.querySelectorAll('.slide-frame').forEach(frame => {
+        frame.classList.add('video-visible');
+      });
+
+      // Brand logo animation
+      const brandLogo = document.getElementById('brand-logo');
+      const gsap = window.gsap;
+
+      // Collect erase targets per line (right-to-left order)
+      const lines = brandLogo.querySelectorAll('.brand-line');
+      const eraseTargets = [];
+      lines.forEach(line => {
+        const chars = Array.from(line.querySelectorAll('.brand-erase'));
+        chars.reverse(); // right-to-left
+        eraseTargets.push(chars);
+      });
+
+      // Measure and lock natural widths (GSAP can't tween to 'auto')
+      eraseTargets.forEach(lineChars => {
+        lineChars.forEach(ch => {
+          ch._naturalWidth = ch.offsetWidth;
+          gsap.set(ch, { width: ch.offsetWidth });
+        });
+      });
+
+      // Calculate scale ratio for shrink phase
+      const largeFontSize = parseFloat(getComputedStyle(brandLogo).fontSize);
+      const targetSmallPx = Math.max(28, Math.min(48, window.innerWidth * 0.04));
+      const smallScale = targetSmallPx / largeFontSize;
+
+      // Consulting label + services list
+      const consultingInner = document.getElementById('consulting-inner');
+      const servicesList = document.getElementById('services-list');
+      const svcInners = servicesList.querySelectorAll('.svc-inner');
+
+      // Services list starts hidden (items pushed up out of their overflow)
+      gsap.set(svcInners, { y: '110%', opacity: 0 });
+
+      let brandTimeline = null;
+      let isExpanded = true;
+
+      engine.onBeforeChange((toIndex, fromIndex) => {
+        if (toIndex > 0 && isExpanded) {
+          // Shrink: bora.now. → b.n.
+          isExpanded = false;
+          if (brandTimeline) brandTimeline.kill();
+          brandTimeline = gsap.timeline();
+
+          // Phase 1: Erase letters right-to-left, both lines simultaneously
+          const maxChars = Math.max(...eraseTargets.map(arr => arr.length));
+          for (let i = 0; i < maxChars; i++) {
+            eraseTargets.forEach(lineChars => {
+              if (lineChars[i]) {
+                brandTimeline.to(lineChars[i], {
+                  width: 0,
+                  opacity: 0,
+                  duration: 0.08,
+                  ease: 'power2.in',
+                }, i * 0.08);
+              }
+            });
+          }
+
+          // Phase 2: Scale down after erasure
+          const eraseEnd = maxChars * 0.08 + 0.08;
+          brandTimeline.to(brandLogo, {
+            scale: smallScale,
+            duration: 0.4,
+            ease: 'power3.inOut',
+          }, eraseEnd);
+
+          // Consulting: inner sinks down + container rises up (double mask)
+          const consultingLabel = document.getElementById('consulting-label');
+          brandTimeline.to(consultingInner, {
+            y: '110%',
+            duration: 0.35,
+            ease: 'power2.in',
+          }, 0);
+          brandTimeline.to(consultingLabel, {
+            y: -20,
+            duration: 0.35,
+            ease: 'power2.in',
+          }, 0);
+
+          // Services list: slide in from top, staggered
+          brandTimeline.to(svcInners, {
+            y: '0%',
+            opacity: 1,
+            duration: 0.45,
+            ease: 'power3.out',
+            stagger: 0.04,
+          }, 0.2);
+
+        } else if (toIndex === 0 && !isExpanded) {
+          // Expand: b.n. → bora.now.
+          isExpanded = true;
+          if (brandTimeline) brandTimeline.kill();
+          brandTimeline = gsap.timeline();
+
+          // Services list: slide out upward
+          brandTimeline.to(svcInners, {
+            y: '110%',
+            opacity: 0,
+            duration: 0.3,
+            ease: 'power2.in',
+            stagger: 0.02,
+          }, 0);
+
+          // Phase 1: Scale up
+          brandTimeline.to(brandLogo, {
+            scale: 1,
+            duration: 0.4,
+            ease: 'power3.inOut',
+          }, 0.15);
+
+          // Phase 2: Reveal letters left-to-right (reversed erase order)
+          const maxChars = Math.max(...eraseTargets.map(arr => arr.length));
+          for (let i = maxChars - 1; i >= 0; i--) {
+            eraseTargets.forEach(lineChars => {
+              if (lineChars[i]) {
+                brandTimeline.to(lineChars[i], {
+                  width: lineChars[i]._naturalWidth,
+                  opacity: 1,
+                  duration: 0.08,
+                  ease: 'power2.out',
+                }, 0.55 + (maxChars - 1 - i) * 0.08);
+              }
+            });
+          }
+
+          // Consulting: container drops back + inner rises
+          const consultingLabel2 = document.getElementById('consulting-label');
+          brandTimeline.to(consultingLabel2, {
+            y: 0,
+            duration: 0.35,
+            ease: 'power3.out',
+          }, 0.5);
+          brandTimeline.to(consultingInner, {
+            y: '0%',
+            duration: 0.35,
+            ease: 'power3.out',
+          }, 0.5);
+        }
+      });
 
       const loader = document.getElementById('loader');
       setTimeout(() => {

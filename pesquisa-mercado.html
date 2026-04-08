@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bora.now - Pesquisa de Mercado: Consultoria na Era da IA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.7;
+            padding: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 2rem;
+            color: #f5f0c8;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+        .subtitle {
+            color: #888;
+            font-size: 0.95rem;
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid #222;
+            padding-bottom: 1.5rem;
+        }
+        .section-title {
+            font-size: 1.3rem;
+            color: #f5f0c8;
+            margin: 2rem 0 1rem;
+            padding-left: 0.5rem;
+            border-left: 3px solid #f5f0c8;
+        }
+        details {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+        details:hover { border-color: #333; }
+        details[open] { border-color: #f5f0c8; }
+        summary {
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #ccc;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        summary::-webkit-details-marker { display: none; }
+        summary::before {
+            content: '+';
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #222;
+            color: #f5f0c8;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+        details[open] summary::before {
+            content: '-';
+            background: #f5f0c8;
+            color: #0a0a0a;
+        }
+        details[open] summary { color: #f5f0c8; }
+        .content {
+            padding: 0 1.25rem 1.25rem 3.25rem;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        .content ul { padding-left: 1.25rem; }
+        .content li { margin-bottom: 0.6rem; }
+        .stat {
+            color: #f5f0c8;
+            font-weight: 700;
+        }
+        .tag {
+            display: inline-block;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            padding: 0.15rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #888;
+            margin-right: 0.4rem;
+            margin-bottom: 0.3rem;
+        }
+        .tag.pain { border-color: #ff6b6b44; color: #ff6b6b; }
+        .tag.opportunity { border-color: #51cf6644; color: #51cf66; }
+        .tag.data { border-color: #f5f0c844; color: #f5f0c8; }
+        .insight-box {
+            background: #0d1117;
+            border: 1px solid #f5f0c833;
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin: 1rem 0;
+            font-style: italic;
+            color: #ccc;
+        }
+        .insight-box strong { color: #f5f0c8; }
+        .source {
+            font-size: 0.75rem;
+            color: #555;
+            margin-top: 0.4rem;
+        }
+        .argument-card {
+            background: linear-gradient(135deg, #111 0%, #0d1117 100%);
+            border: 1px solid #f5f0c844;
+            border-radius: 10px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+        .argument-card h4 {
+            color: #f5f0c8;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .argument-card p {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #222;
+            margin: 2.5rem 0;
+        }
+        .toc {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+        }
+        .toc h3 { color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.75rem; }
+        .toc a { color: #f5f0c8; text-decoration: none; display: block; padding: 0.3rem 0; font-size: 0.9rem; }
+        .toc a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<h1>Pesquisa de Mercado: Consultoria Tech na Era da IA</h1>
+<p class="subtitle">Pesquisa para posicionamento da bora.now &mdash; Abril 2026</p>
+
+<nav class="toc">
+    <h3>Indice</h3>
+    <a href="#frustracoes">1. Frustracoes com Consultorias Tradicionais</a>
+    <a href="#dados">2. Dados e Numeros do Mercado</a>
+    <a href="#quer">3. O que Clientes Realmente Querem</a>
+    <a href="#novos">4. Novos Modelos Emergentes</a>
+    <a href="#argumentos">5. Argumentos para a bora.now</a>
+    <a href="#fontes">6. Fontes</a>
+</nav>
+
+<!-- ============================== -->
+<h2 class="section-title" id="frustracoes">1. Frustracoes com Consultorias Tradicionais</h2>
+
+<details>
+    <summary>Modelo "Entrega Relatorio e Vai Embora"</summary>
+    <div class="content">
+        <p><span class="tag pain">dor</span><span class="tag">modelo de negocio</span></p>
+        <ul>
+            <li>Clientes estao cansados de <strong>pagar por relatorios ou horas e torcer por resultados</strong> - o modelo classico onde o consultor sai sem garantir que a implementacao funcione</li>
+            <li>Zimmer Biomet processou a Deloitte em <span class="stat">$172 milhoes</span> por uma implementacao de software fracassada (2025) - sinal de que clientes nao toleram mais entregas ruins</li>
+            <li>Consultores tem experiencia teorica/frameworks, mas <strong>falta experiencia pratica de implementacao em escala</strong></li>
+        </ul>
+        <div class="insight-box">
+            <strong>Argumento bora.now:</strong> "A gente nao entrega relatorio. A gente entrega resultado rodando."
+        </div>
+    </div>
+</details>
+
+<details>
+    <summary>IA Comoditizou o Core das Big Consulting</summary>
+    <div class="content">
+        <p><span class="tag pain">dor</span><span class="tag data">dado</span></p>
+        <ul>
+            <li><span class="stat">27% das tarefas</span> tradicionais de consultoria sao diretamente automatizaveis por IA - pesquisa de mercado, sintese de dados e montagem de apresentacoes</li>
+            <li>Firmas como McKinsey construiram vantagem competitiva contratando mentes analiticas de elite, mas na era da IA <strong>essa vantagem virou commodity</strong></li>
+            <li>Apesar de gastar bilhoes em servicos de IA, as consultorias tradicionais estao sendo criticadas por <strong>prometer demais e entregar de menos</strong></li>
+        </ul>
+        <div class="insight-box">
+            <strong>Argumento bora.now:</strong> "O que antes custava 6 meses de consultoria e 200 slides, hoje a gente resolve em sprints de 2 semanas com IA nativa."
+        </div>
+    </div>
+</details>
+
+<details>
+    <summary>Cobranca por Hora vs Eficiencia da IA</summary>
+    <div class="content">
+        <p><span class="tag pain">dor</span><span class="tag">pricing</span></p>
+        <ul>
+            <li>Consultorias cobram por hora, mas IA torna o trabalho mais eficiente - <strong>"Voce cobra por tempo, e quando o tempo desaparece, voce precisa mudar o modelo comercial"</strong></li>
+            <li>A piramide tradicional - analistas juniores fazendo trabalho detalhado a precos premium - esta <strong>erodindo</strong> porque IA reduz a necessidade dessa mao-de-obra</li>
+            <li><span class="stat">49% dos contratos</span> ainda sao baseados em numero de consultores, mas <span class="stat">so 16% dos lideres</span> esperam usar esse modelo nos proximos 2 anos</li>
+            <li>Apenas <span class="stat">~25%</span> dos fees da McKinsey globalmente estao ligados a resultados/outcomes</li>
+        </ul>
+        <div class="insight-box">
+            <strong>Argumento bora.now:</strong> "A gente cobra por entrega, nao por hora sentado. Se a IA resolve em 2 dias, voce paga por 2 dias de resultado."
+        </div>
+    </div>
+</details>
+
+<details>
+    <summary>Frameworks Desconectados da Realidade</summary>
+    <div class="content">
+        <p><span class="tag pain">dor</span><span class="tag">metodologia</span></p>
+        <ul>
+            <li>McKinsey e Deloitte trazem <strong>frameworks desenhados para empresas com 10.000+ funcionarios</strong> e orcamentos de TI bilionarios quando atendem empresas de medio porte</li>
+            <li>Clientes exigem <strong>resultados mensuraveis ao inves de frameworks teoricos</strong></li>
+            <li>Solucoes genericas tipo "one-size-fits-all" nao funcionam mais</li>
+        </ul>
+        <div class="insight-box">
+            <strong>Argumento bora.now:</strong> "Sem frameworks de 200 paginas. Solucao sob medida, validada com dados reais do seu negocio."
+        </div>
+    </div>
+</details>
+
+<details>
+    <summary>Aprendendo no Trabalho do Cliente</summary>
+    <div class="content">
+        <p><span class="tag pain">dor</span><span class="tag">confianca</span></p>
+        <ul>
+            <li>Consultores frequentemente criam <strong>prototipos ou POCs convincentes mas nao tem profundidade para escalar</strong> em toda a empresa</li>
+            <li>Em varios casos, clientes perceberam que consultores estavam <strong>aprendendo no job</strong> - erodindo confianca e criando sensacao de overbilling</li>
+            <li>Overpromising em IA/transformacao digital <strong>nao e mais tolerado</strong></li>
+        </ul>
+        <div class="insight-box">
+            <strong>Argumento bora.now:</strong> "Nosso time opera IA no dia-a-dia, nao aprendeu na semana passada pra vender pra voce."
+        </div>
+    </div>
+</details>
+
+<details>
+    <summary>Divida Tecnica e Custo de Manter o Legado</summary>
+    <div class="content">
+        <p><span class="tag pain">dor</span><span class="tag data">dado</span></p>
+        <ul>
+            <li><span class="stat">40% dos orcamentos de TI</span> sao gastos mantendo divida tecnica</li>
+            <li>Custos de aplicacao podem chegar a <span class="stat">80% do orcamento total de TI</span></li>
+            <li><span class="stat">90%+ dos consumidores</span> trocariam de fornecedor ao inves de trabalhar com empresa que usa tecnologia/metodos defasados</li>
+        </ul>
+        <div class="insight-box">
+            <strong>Argumento bora.now:</strong> "A gente nao empilha mais tecnologia em cima de legado. A gente repensa o stack com as ferramentas de hoje."
+        </div>
+    </div>
+</details>
+
+<!-- ============================== -->
+<hr>
+<h2 class="section-title" id="dados">2. Dados e Numeros do Mercado</h2>
+
+<details>
+    <summary>Crescimento e Projecoes</summary>
+    <div class="content">
+        <p><span class="tag data">dado</span><span class="tag opportunity">oportunidade</span></p>
+        <ul>
+            <li>Mercado de consultoria em IA: de <span class="stat">$11 bi (2025)</span> para <span class="stat">$91 bi (2035)</span> - crescimento de <span class="stat">26.2% ao ano</span></li>
+            <li><span class="stat">65% das Fortune 500</span> ja tem contratos de retainer com consultores de IA (marco 2025)</li>
+            <li>Consultorias focadas em execucao (Deloitte, EY, Accenture) crescem <span class="stat">~11-12% ao ano</span>, enquanto MBB (McKinsey, BCG, Bain) crescem <span class="stat">~5-6%</span></li>
+            <li>Aumento de <span class="stat">38%</span> na demanda por consultoria baseada em sprints</li>
+        </ul>
+    </div>
+</details>
+
+<details>
+    <summary>Sinais de Crise no Modelo Tradicional</summary>
+    <div class="content">
+        <p><span class="tag pain">dor</span><span class="tag data">dado</span></p>
+        <ul>
+            <li><span class="stat">65% dos executivos</span> dizem que modelos tradicionais de consultoria <strong>nao entregam mais valor</strong></li>
+            <li>McKinsey fez layoffs significativos - sinal de desafios estruturais no modelo tradicional</li>
+            <li>Empresas tech-savvy estao <strong>construindo capacidade interna de IA</strong> ao inves de pagar milhoes em consultoria</li>
+            <li>OpenAI lancou divisao de consultoria - <strong>cortando intermediarios</strong> e colocando engenheiros direto dentro das empresas</li>
+        </ul>
+    </div>
+</details>
+
+<details>
+    <summary>Mudanca no Modelo de Cobranca</summary>
+    <div class="content">
+        <p><span class="tag data">dado</span><span class="tag opportunity">oportunidade</span></p>
+        <ul>
+            <li>Hoje: <span class="stat">49%</span> dos contratos baseados em headcount</li>
+            <li>Em 2 anos: apenas <span class="stat">16%</span> dos lideres esperam manter esse modelo</li>
+            <li><span class="stat">73%</span> dos clientes esperam visibilidade em tempo real do status do projeto</li>
+            <li>Clientes exigem pilotos de <span class="stat">8-12 semanas</span> com ROI claro e plano de escala</li>
+        </ul>
+    </div>
+</details>
+
+<!-- ============================== -->
+<hr>
+<h2 class="section-title" id="quer">3. O que Clientes Realmente Querem</h2>
+
+<details>
+    <summary>Velocidade e Resultados Tangiveis</summary>
+    <div class="content">
+        <p><span class="tag opportunity">oportunidade</span></p>
+        <ul>
+            <li><strong>Resultados rapidos e ROI claro</strong> - nao frameworks teoricos</li>
+            <li>Pilotos de 8-12 semanas com impacto mensuravel no negocio</li>
+            <li>Transicao seamless de "o que fazer" para "como fazer e fazer funcionar"</li>
+            <li>Menos contratos longos e abertos, mais sprints focados com entrega definida</li>
+        </ul>
+    </div>
+</details>
+
+<details>
+    <summary>Transparencia e Accountability</summary>
+    <div class="content">
+        <p><span class="tag opportunity">oportunidade</span></p>
+        <ul>
+            <li><span class="stat">73%</span> esperam visibilidade em tempo real do projeto</li>
+            <li>Cobranca baseada em outcome, nao em horas</li>
+            <li>Accountability real - se nao funciona, nao paga</li>
+            <li>Processos transparentes do inicio ao fim</li>
+        </ul>
+    </div>
+</details>
+
+<details>
+    <summary>Implementacao, Nao So Recomendacoes</summary>
+    <div class="content">
+        <p><span class="tag opportunity">oportunidade</span></p>
+        <ul>
+            <li>Solucoes end-to-end: da estrategia ate a implementacao rodando</li>
+            <li>Consultoria que <strong>faz junto</strong>, nao que so recomenda</li>
+            <li>"Fazer funcionar e ficar" - nao projetos one-off que morrem</li>
+            <li>Transferencia de capacidade para o time interno - sustentabilidade</li>
+        </ul>
+    </div>
+</details>
+
+<details>
+    <summary>Skills Tecnicas + Inteligencia Humana</summary>
+    <div class="content">
+        <p><span class="tag opportunity">oportunidade</span></p>
+        <ul>
+            <li>Consultores que entendem <strong>tecnologia E organizacoes</strong> - nao so um dos dois</li>
+            <li>Especialistas em IA, cloud, dados e seguranca (nao generalistas)</li>
+            <li>Inteligencia emocional junto com expertise tecnica</li>
+            <li><span class="stat">75%</span> das organizacoes esperam que risco ciber seja sua preocupacao primaria ate 2026</li>
+        </ul>
+    </div>
+</details>
+
+<!-- ============================== -->
+<hr>
+<h2 class="section-title" id="novos">4. Novos Modelos Emergentes</h2>
+
+<details>
+    <summary>O Modelo "Obelisco" (HBR)</summary>
+    <div class="content">
+        <p><span class="tag opportunity">oportunidade</span><span class="tag">modelo</span></p>
+        <ul>
+            <li>Substituindo a piramide tradicional: estrutura mais enxuta com menos camadas</li>
+            <li><strong>3 papeis-chave:</strong></li>
+            <li><strong>AI Facilitators</strong> - profissionais treinados em ferramentas de IA e pipelines de dados</li>
+            <li><strong>Engagement Architects</strong> - consultores experientes que lideram projetos e interpretam outputs de IA</li>
+            <li><strong>Client Leaders</strong> - relacionamento profundo com executivos</li>
+        </ul>
+        <p class="source">Fonte: Harvard Business Review, Set 2025</p>
+    </div>
+</details>
+
+<details>
+    <summary>Unity Advisory - Caso Real ($300M)</summary>
+    <div class="content">
+        <p><span class="tag opportunity">oportunidade</span><span class="tag">case</span></p>
+        <ul>
+            <li>Fundada por ex-socios de Big Four com <span class="stat">$300 milhoes</span> em capital privado</li>
+            <li>Posicionamento: <strong>livre de conflito e AI-native by design</strong></li>
+            <li>Elimina a piramide alavancada - usa <strong>pods ageis de consultores senior</strong> + ferramentas proprietarias de IA</li>
+            <li>Entrega rapida e expert-driven sem o modelo classico de horas buraveis</li>
+        </ul>
+    </div>
+</details>
+
+<details>
+    <summary>Consultoria Continua (vs. Projetos)</summary>
+    <div class="content">
+        <p><span class="tag opportunity">oportunidade</span><span class="tag">modelo</span></p>
+        <ul>
+            <li>Conceito de "continuous AI consulting" - relacionamento ongoing ao inves de projetos pontuais</li>
+            <li><span class="stat">65% das Fortune 500</span> ja adotam modelo de retainer com consultores de IA</li>
+            <li>OpenAI cortando intermediarios: coloca engenheiros <strong>direto dentro das empresas</strong></li>
+            <li>Foco em capability building, nao dependencia</li>
+        </ul>
+    </div>
+</details>
+
+<!-- ============================== -->
+<hr>
+<h2 class="section-title" id="argumentos">5. Argumentos para a bora.now</h2>
+<p style="color:#888; margin-bottom:1.5rem; font-size:0.9rem;">Argumentos destilados da pesquisa - prontos para usar na landing page</p>
+
+<div class="argument-card">
+    <h4>1. "Resultado, nao relatorio"</h4>
+    <p>65% dos executivos dizem que o modelo tradicional nao entrega mais valor. Clientes querem implementacao rodando, nao PDFs bonitos. bora.now entrega codigo em producao, nao slides.</p>
+</div>
+
+<div class="argument-card">
+    <h4>2. "IA nativa, nao IA de vitrine"</h4>
+    <p>27% das tarefas de consultoria ja sao automatizaveis. Consultorias tradicionais vendem IA mas operam como em 2015. bora.now nasceu com IA no core - nao e um add-on, e como a gente trabalha.</p>
+</div>
+
+<div class="argument-card">
+    <h4>3. "Cobra por entrega, nao por bunda na cadeira"</h4>
+    <p>49% dos contratos ainda sao por headcount, mas so 16% dos lideres querem manter isso. bora.now cobra por sprint entregue e resultado mensuravel.</p>
+</div>
+
+<div class="argument-card">
+    <h4>4. "Time senior, nao piramide de estagiarios"</h4>
+    <p>A piramide de juniores aprendendo no seu projeto esta morrendo. bora.now opera com pods enxutos de especialistas + IA, sem camadas de burocracia.</p>
+</div>
+
+<div class="argument-card">
+    <h4>5. "Velocidade de startup, experiencia de enterprise"</h4>
+    <p>Clientes exigem pilotos de 8-12 semanas com ROI claro. bora.now entrega sprints de 2 semanas com deploy real, nao waterfall de 6 meses.</p>
+</div>
+
+<div class="argument-card">
+    <h4>6. "Transparencia total, nao caixa preta"</h4>
+    <p>73% dos clientes querem visibilidade em tempo real. bora.now abre o processo: voce ve o que esta sendo feito, quando, e por que.</p>
+</div>
+
+<div class="argument-card">
+    <h4>7. "Sob medida, nao framework generico"</h4>
+    <p>Frameworks da McKinsey sao feitos pra empresas de 10.000+ pessoas. bora.now entende seu contexto real e adapta a solucao - nao o contrario.</p>
+</div>
+
+<div class="argument-card">
+    <h4>8. "Construir capacidade, nao dependencia"</h4>
+    <p>Clientes querem que a consultoria va embora e o resultado fique. bora.now transfere conhecimento e capacidade pro time interno - o objetivo e voce nao precisar mais da gente.</p>
+</div>
+
+<!-- ============================== -->
+<hr>
+<h2 class="section-title" id="fontes">6. Fontes</h2>
+
+<details>
+    <summary>Todas as fontes da pesquisa (20+ artigos)</summary>
+    <div class="content">
+        <ul>
+            <li>2026 Consulting's AI Revolution Update - futureofconsulting.ai</li>
+            <li>AI Is Changing the Structure of Consulting Firms - Harvard Business Review (Set 2025)</li>
+            <li>Consulting's 2026 Reckoning: AI, Niches and the Specialist Surge - WebProNews</li>
+            <li>Consulting in Crisis: AI's Boom Leaves Big Firms Struggling - National CIO Review</li>
+            <li>2026 Consulting Trends - Deltek</li>
+            <li>How AI Is Affecting The Consulting Industry: McKinsey Edition - Poets & Quants</li>
+            <li>AI Consulting in 2025: Trends Defining the Future - Medium</li>
+            <li>Consulting's AI moment: Why the old playbook no longer works - IBM Newsroom</li>
+            <li>Is AI the end of consulting? - Fortune (Mar 2026)</li>
+            <li>AI disruption in consulting - Strat-Bridge</li>
+            <li>Why the McKinsey layoffs are a warning signal - Fast Company</li>
+            <li>AI, Trump put pressure on consulting firms - Axios</li>
+            <li>OpenAI launches consulting division - The Finance Story</li>
+            <li>The Long Overdue Collapse of Corporate Consulting - Medium</li>
+            <li>Why Big 4 are Failing Mid-Size Companies with AI - DAS Advanced Systems</li>
+            <li>State of AI in Business 2025 Report - MIT NANDA</li>
+            <li>AI-Powered Consulting Forces Reckoning: 65% of Enterprises Survey - PR Newswire</li>
+            <li>2026 Tech Consulting Trends - Bull City Talent Group</li>
+            <li>The Technology Consulting Market in 2025-2026 - Source Global Research</li>
+            <li>The AI consulting shake-up - Aspectus Group</li>
+        </ul>
+    </div>
+</details>
+
+</body>
+</html>

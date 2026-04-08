@@ -1,47 +1,59 @@
 // Video background carousel
-// Cycles through videos independently of slide navigation
-// Each video crossfades to the next on a timer
+// Each video crossfades to the next starting at 2.5s to avoid frozen last frame.
 
-const INTERVAL = 12000; // ms between video switches
-const PRELOAD_AHEAD = 1; // how many videos to preload ahead
+const FADE_AT = 2.5; // seconds — start crossfade before video ends
 
 export class VideoBg {
   constructor(container) {
     this.container = container;
     this.videos = Array.from(container.querySelectorAll('video'));
     this.current = 0;
-    this.timer = null;
+    this.transitioning = false;
   }
 
   init() {
     if (!this.videos.length) return;
 
-    // First video is already active + autoplay
-    // Preload next
+    // Remove loop from all videos
+    this.videos.forEach(v => v.removeAttribute('loop'));
+
+    // Watch timeupdate to trigger early crossfade
+    this.videos.forEach(vid => {
+      vid.addEventListener('timeupdate', () => {
+        if (!this.transitioning && vid === this.videos[this.current] && vid.currentTime >= FADE_AT) {
+          this.transitioning = true;
+          this.next();
+        }
+      });
+    });
+
+    // Preload next video
     this.preload(1);
 
-    // Start cycling
-    this.timer = setInterval(() => this.next(), INTERVAL);
+    // First video is already active + autoplay
+    this.videos[0].play().catch(() => {});
   }
 
   next() {
     const prev = this.current;
     this.current = (this.current + 1) % this.videos.length;
 
-    // Preload upcoming
-    this.preload(this.current);
+    const nextVid = this.videos[this.current];
+
+    // Preload the one after next
     this.preload((this.current + 1) % this.videos.length);
 
-    // Start playing new video before making it visible
-    const nextVid = this.videos[this.current];
+    // Reset and play next before crossfade
+    nextVid.currentTime = 0;
     nextVid.play().catch(() => {});
 
     // Crossfade
     this.videos[prev].classList.remove('active');
     nextVid.classList.add('active');
 
-    // Pause previous after fade completes
+    // Reset previous after fade completes, unlock transition
     setTimeout(() => {
+      this.transitioning = false;
       if (!this.videos[prev].classList.contains('active')) {
         this.videos[prev].pause();
         this.videos[prev].currentTime = 0;
@@ -55,9 +67,5 @@ export class VideoBg {
     vid.preload = 'auto';
     vid.load();
     vid.dataset.preloaded = 'true';
-  }
-
-  destroy() {
-    if (this.timer) clearInterval(this.timer);
   }
 }

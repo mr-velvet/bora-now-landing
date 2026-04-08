@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bora.now - Pesquisa + Proposta de Slides</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.7;
+            padding: 2rem;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+        h1 { font-size: 2rem; color: #f5f0c8; margin-bottom: 0.5rem; letter-spacing: -0.5px; }
+        .subtitle { color: #888; font-size: 0.95rem; margin-bottom: 2.5rem; border-bottom: 1px solid #222; padding-bottom: 1.5rem; }
+        .section-title { font-size: 1.3rem; color: #f5f0c8; margin: 2.5rem 0 1rem; padding-left: 0.5rem; border-left: 3px solid #f5f0c8; }
+
+        /* Collapsible base */
+        details { background: #111; border: 1px solid #222; border-radius: 8px; margin-bottom: 0.75rem; overflow: hidden; transition: all 0.2s; }
+        details:hover { border-color: #333; }
+        details[open] { border-color: #f5f0c8; }
+        summary { padding: 1rem 1.25rem; cursor: pointer; font-weight: 600; font-size: 0.95rem; color: #ccc; list-style: none; display: flex; align-items: center; gap: 0.75rem; }
+        summary::-webkit-details-marker { display: none; }
+        summary::before { content: '+'; display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: #222; color: #f5f0c8; font-size: 1.1rem; flex-shrink: 0; transition: all 0.2s; }
+        details[open] summary::before { content: '-'; background: #f5f0c8; color: #0a0a0a; }
+        details[open] summary { color: #f5f0c8; }
+        .content { padding: 0 1.25rem 1.25rem 3.25rem; color: #aaa; font-size: 0.9rem; }
+        .content ul { padding-left: 1.25rem; }
+        .content li { margin-bottom: 0.6rem; }
+
+        /* Tags */
+        .stat { color: #f5f0c8; font-weight: 700; }
+        .tag { display: inline-block; background: #1a1a1a; border: 1px solid #333; padding: 0.15rem 0.6rem; border-radius: 20px; font-size: 0.75rem; color: #888; margin-right: 0.4rem; margin-bottom: 0.3rem; }
+        .tag.pain { border-color: #ff6b6b44; color: #ff6b6b; }
+        .tag.opportunity { border-color: #51cf6644; color: #51cf66; }
+        .tag.data { border-color: #f5f0c844; color: #f5f0c8; }
+        .tag.slide { border-color: #74c0fc44; color: #74c0fc; }
+
+        /* Insight box */
+        .insight-box { background: #0d1117; border: 1px solid #f5f0c833; border-radius: 8px; padding: 1rem 1.25rem; margin: 1rem 0; font-style: italic; color: #ccc; }
+        .insight-box strong { color: #f5f0c8; }
+
+        /* Slide proposal */
+        .slide-proposal { background: #0a0f1a; border: 1px solid #74c0fc33; border-radius: 10px; margin: 1rem 0; overflow: hidden; }
+        .slide-proposal summary { background: #0d1520; color: #74c0fc; font-size: 0.85rem; padding: 0.75rem 1rem; }
+        .slide-proposal summary::before { background: #1a2a3a; color: #74c0fc; font-size: 0.9rem; width: 20px; height: 20px; }
+        .slide-proposal[open] summary::before { background: #74c0fc; color: #0a0a0a; }
+        .slide-proposal[open] { border-color: #74c0fc66; }
+        .slide-proposal .content { padding: 0.75rem 1rem 1rem 2.75rem; }
+
+        /* Slide preview mockup */
+        .slide-mockup { background: #000; border: 1px solid #333; border-radius: 8px; padding: 2rem; margin: 1rem 0; position: relative; min-height: 180px; display: flex; flex-direction: column; justify-content: center; }
+        .slide-mockup .mock-label { position: absolute; top: 8px; right: 12px; font-size: 0.65rem; color: #555; text-transform: uppercase; letter-spacing: 1px; }
+        .slide-mockup .mock-step { font-size: 0.7rem; color: #74c0fc; margin-bottom: 0.25rem; font-family: monospace; }
+        .slide-mockup .mock-big { font-size: 1.8rem; font-weight: 700; color: #f5f0c8; line-height: 1.2; margin: 0.5rem 0; }
+        .slide-mockup .mock-medium { font-size: 1.1rem; color: #ccc; line-height: 1.4; margin: 0.3rem 0; }
+        .slide-mockup .mock-small { font-size: 0.85rem; color: #888; margin: 0.3rem 0; }
+        .slide-mockup .mock-stat { font-size: 3rem; font-weight: 800; color: #f5f0c8; font-family: 'Space Grotesk', monospace; }
+        .slide-mockup .mock-dim { color: #555; }
+        .slide-mockup .mock-highlight { color: #ff6b6b; }
+        .slide-mockup .mock-accent { color: #51cf66; }
+        .slide-mockup .mock-strike { text-decoration: line-through; color: #555; }
+
+        /* Animation sequence */
+        .anim-seq { background: #111; border: 1px solid #222; border-radius: 6px; padding: 0.75rem 1rem; margin: 0.75rem 0; font-size: 0.8rem; }
+        .anim-seq h5 { color: #74c0fc; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+        .anim-step { display: flex; gap: 0.5rem; margin-bottom: 0.3rem; align-items: baseline; }
+        .anim-step .step-n { color: #74c0fc; font-family: monospace; min-width: 1.5rem; }
+        .anim-step .step-desc { color: #aaa; }
+        .anim-step .step-anim { color: #f5f0c8; font-family: monospace; font-size: 0.75rem; }
+
+        /* Code snippet */
+        .code-block { background: #0d1117; border: 1px solid #1a2a3a; border-radius: 6px; padding: 1rem; margin: 0.75rem 0; overflow-x: auto; font-size: 0.78rem; line-height: 1.5; font-family: 'Cascadia Code', 'Fira Code', monospace; color: #aaa; }
+        .code-block .ck { color: #ff7b72; }
+        .code-block .cs { color: #a5d6ff; }
+        .code-block .cn { color: #f5f0c8; }
+        .code-block .cc { color: #555; }
+
+        /* Diagram ideas */
+        .diagram-idea { background: #111; border: 1px dashed #333; border-radius: 8px; padding: 1rem; margin: 0.75rem 0; }
+        .diagram-idea h5 { color: #51cf66; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+        .diagram-idea p { font-size: 0.85rem; color: #aaa; }
+        .diagram-ascii { font-family: monospace; font-size: 0.75rem; color: #888; line-height: 1.4; white-space: pre; margin: 0.5rem 0; }
+
+        hr { border: none; border-top: 1px solid #222; margin: 2.5rem 0; }
+        .toc { background: #111; border: 1px solid #222; border-radius: 8px; padding: 1.25rem; margin-bottom: 2rem; }
+        .toc h3 { color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.75rem; }
+        .toc a { color: #f5f0c8; text-decoration: none; display: block; padding: 0.3rem 0; font-size: 0.9rem; }
+        .toc a:hover { text-decoration: underline; }
+        .source { font-size: 0.75rem; color: #555; margin-top: 0.4rem; }
+
+        /* Legend */
+        .legend { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1rem 0; padding: 0.75rem 1rem; background: #111; border-radius: 6px; border: 1px solid #222; }
+        .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: #888; }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .legend-dot.l-research { background: #f5f0c8; }
+        .legend-dot.l-slide { background: #74c0fc; }
+        .legend-dot.l-diagram { background: #51cf66; }
+    </style>
+</head>
+<body>
+
+<h1>Pesquisa + Proposta de Slides</h1>
+<p class="subtitle">bora.now &mdash; Abril 2026 &mdash; Cada argumento com pesquisa, texto de slide, sequencia de animacao, snippet e ideias de diagrama</p>
+
+<div class="legend">
+    <div class="legend-item"><span class="legend-dot l-research"></span> Pesquisa</div>
+    <div class="legend-item"><span class="legend-dot l-slide"></span> Proposta de slide</div>
+    <div class="legend-item"><span class="legend-dot l-diagram"></span> Ideia de diagrama</div>
+</div>
+
+<nav class="toc">
+    <h3>8 Argumentos</h3>
+    <a href="#arg1">1. Resultado, nao relatorio</a>
+    <a href="#arg2">2. IA nativa, nao IA de vitrine</a>
+    <a href="#arg3">3. Cobra por entrega, nao por hora</a>
+    <a href="#arg4">4. Time senior, nao piramide</a>
+    <a href="#arg5">5. Velocidade de startup, experiencia enterprise</a>
+    <a href="#arg6">6. Transparencia total</a>
+    <a href="#arg7">7. Sob medida, nao framework generico</a>
+    <a href="#arg8">8. Construir capacidade, nao dependencia</a>
+    <a href="#arg9" style="color:#51cf66;">9. Traga um lead, ganhe 20% (Programa de Indicacao)</a>
+</nav>
+
+<!-- ============================================================ -->
+<!-- ARGUMENTO 1 -->
+<!-- ============================================================ -->
+<h2 class="section-title" id="arg1">1. "Resultado, nao relatorio"</h2>
+
+<details>
+    <summary>Pesquisa e dados</summary>
+    <div class="content">
+        <p><span class="tag pain">dor</span><span class="tag data">dado</span></p>
+        <ul>
+            <li><span class="stat">65% dos executivos</span> dizem que modelo tradicional nao entrega mais valor</li>
+            <li>Zimmer Biomet processou Deloitte em <span class="stat">$172M</span> por implementacao fracassada</li>
+            <li>Modelo "entrega relatorio e vai embora" esta sendo ativamente rejeitado pelo mercado</li>
+            <li>Clientes querem transicao seamless de "o que fazer" para "como fazer e fazer funcionar"</li>
+        </ul>
+    </div>
+</details>
+
+<details class="slide-proposal">
+    <summary>Proposta de Slide: Statement com dramatizacao</summary>
+    <div class="content">
+
+        <p><span class="tag slide">tipo: statement</span> <span class="tag slide">tema: dark</span></p>
+
+        <div class="slide-mockup">
+            <span class="mock-label">preview</span>
+            <div class="mock-medium"><span class="mock-dim">Consultorias tradicionais entregam</span></div>
+            <div class="mock-big"><span class="mock-strike">200 slides.</span></div>
+            <div class="mock-medium" style="margin-top:0.75rem">A gente entrega</div>
+            <div class="mock-big"><span class="mock-accent">resultado rodando.</span></div>
+        </div>
+
+        <div class="anim-seq">
+            <h5>Sequencia de Animacao</h5>
+            <div class="anim-step"><span class="step-n">1</span><span class="step-desc">Typewriter: "Consultorias tradicionais entregam"</span><span class="step-anim">typewriter</span></div>
+            <div class="anim-step"><span class="step-n">2</span><span class="step-desc">"200 slides." aparece grande, bold</span><span class="step-anim">scale-in</span></div>
+            <div class="anim-step"><span class="step-n">3</span><span class="step-desc">Pausa dramatica (0.8s) - depois risco vermelho corta "200 slides"</span><span class="step-anim">clip-reveal (strikethrough)</span></div>
+            <div class="anim-step"><span class="step-n">4</span><span class="step-desc">"A gente entrega" sobe suave</span><span class="step-anim">fade-up</span></div>
+            <div class="anim-step"><span class="step-n">5</span><span class="step-desc">"resultado rodando." aparece em verde, scale-in com bounce</span><span class="step-anim">scale-in</span></div>
+        </div>
+
+        <p style="margin:0.75rem 0; color:#74c0fc; font-size:0.85rem;"><strong>Texto otimizado do slide:</strong></p>
+        <p style="color:#ccc;">"Consultorias tradicionais entregam 200 slides. A gente entrega resultado rodando."</p>
+
+        <div class="code-block">
+<span class="cc">// slides-data.js</span>
+{
+  <span class="ck">id</span>: <span class="cs">"resultado-nao-relatorio"</span>,
+  <span class="ck">type</span>: <span class="cs">"statement"</span>,
+  <span class="ck">theme</span>: <span class="cs">"dark"</span>,
+  <span class="ck">content</span>: {
+    <span class="ck">text</span>: <span class="cs">"Consultorias tradicionais entregam 200 slides. A gente entrega resultado rodando."</span>,
+    <span class="ck">emojis</span>: { <span class="cs">"slides."</span>: <span class="cs">"&#10060;"</span>, <span class="cs">"rodando."</span>: <span class="cs">"&#9989;"</span> }
+  }
+}
+        </div>
+
+        <div class="diagram-idea">
+            <h5>Ideia de diagrama</h5>
+            <p><strong>Comparativo visual lado a lado:</strong> Esquerda mostra pilha de documentos/PDFs empilhados (opaco, cinza). Direita mostra tela com dashboard vivo, indicadores verdes pulsando. Animacao: pilha da esquerda faz fade-out enquanto tela da direita faz scale-in.</p>
+            <div class="diagram-ascii">
+  +----------------+     +------------------+
+  |  PDF  PDF  PDF | --> | [=====] Live App  |
+  |  PDF  PDF      |     | [###] Dashboard   |
+  |  (cinza, fade) |     | (verde, pulse)    |
+  +----------------+     +------------------+
+            </div>
+        </div>
+
+    </div>
+</details>
+
+<!-- ============================================================ -->
+<!-- ARGUMENTO 2 -->
+<!-- ============================================================ -->
+<h2 class="section-title" id="arg2">2. "IA nativa, nao IA de vitrine"</h2>
+
+<details>
+    <summary>Pesquisa e dados</summary>
+    <div class="content">
+        <p><span class="tag pain">dor</span><span class="tag data">dado</span></p>
+        <ul>
+            <li><span class="stat">27% das tarefas</span> de consultoria sao automatizaveis por IA</li>
+            <li>Consultorias gastaram bilhoes em "servicos de IA" mas a piramide operacional <strong>nao mudou</strong></li>
+            <li>Clientes percebem que consultores estao <strong>aprendendo IA no projeto deles</strong></li>
+            <li>OpenAI lancou divisao de consultoria propria, cortando intermediarios</li>
+        </ul>
+    </div>
+</details>
+
+<details class="slide-proposal">
+    <summary>Proposta de Slide: Two-cards com contraste</summary>
+    <div class="content">
+
+        <p><span class="tag slide">tipo: two-cards</span> <span class="tag slide">tema: dark</span></p>
+
+        <div class="slide-mockup">
+            <span class="mock-label">preview</span>
+            <div style="display:flex; gap:2rem;">
+                <div style="flex:1; border:1px solid #333; border-radius:6px; padding:1rem;">
+                    <div class="mock-small" style="color:#ff6b6b;">CONSULTORIA 2015</div>
+                    <div class="mock-medium">"Vamos construir uma estrategia de IA"</div>
+                    <div class="mock-small" style="margin-top:0.5rem">6 meses / $500K / PowerPoint</div>
+                </div>
+                <div style="flex:1; border:1px solid #51cf66; border-radius:6px; padding:1rem;">
+                    <div class="mock-small" style="color:#51cf66;">BORA.NOW 2026</div>
+                    <div class="mock-medium">"Ja esta rodando no seu ambiente"</div>
+                    <div class="mock-small" style="margin-top:0.5rem">2 semanas / resultado mensuravel</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="anim-seq">
+            <h5>Sequencia de Animacao</h5>
+            <div class="anim-step"><span class="step-n">1</span><span class="step-desc">Card esquerdo desliza da esquerda: "CONSULTORIA 2015"</span><span class="step-anim">fade-left</span></div>
+            <div class="anim-step"><span class="step-n">2</span><span class="step-desc">Texto do card esquerdo aparece (frase + numeros em vermelho)</span><span class="step-anim">fade-up</span></div>
+            <div class="anim-step"><span class="step-n">3</span><span class="step-desc">Pausa (0.6s)</span></div>
+            <div class="anim-step"><span class="step-n">4</span><span class="step-desc">Card direito desliza: "BORA.NOW 2026" com borda verde</span><span class="step-anim">fade-left</span></div>
+            <div class="anim-step"><span class="step-n">5</span><span class="step-desc">Texto do card direito aparece (frase + numeros em verde)</span><span class="step-anim">fade-up</span></div>
+        </div>
+
+        <p style="margin:0.75rem 0; color:#74c0fc; font-size:0.85rem;"><strong>Texto otimizado do slide:</strong></p>
+        <p style="color:#ccc;"><strong>Esquerda:</strong> "Vamos construir uma estrategia de IA" - 6 meses, $500K, PowerPoint<br><strong>Direita:</strong> "Ja esta rodando no seu ambiente" - 2 semanas, resultado mensuravel</p>
+
+        <div class="code-block">
+{
+  <span class="ck">id</span>: <span class="cs">"ia-nativa"</span>,
+  <span class="ck">type</span>: <span class="cs">"two-cards"</span>,
+  <span class="ck">theme</span>: <span class="cs">"dark"</span>,
+  <span class="ck">content</span>: {
+    <span class="ck">left</span>: <span class="cs">"&lt;span style='color:#ff6b6b;font-size:0.7em'&gt;CONSULTORIA 2015&lt;/span&gt;&lt;br&gt;\"Vamos construir uma estrategia de IA\"&lt;br&gt;&lt;span style='color:#555'&gt;6 meses / $500K / PowerPoint&lt;/span&gt;"</span>,
+    <span class="ck">right</span>: <span class="cs">"&lt;span style='color:#51cf66;font-size:0.7em'&gt;BORA.NOW 2026&lt;/span&gt;&lt;br&gt;\"Ja esta rodando no seu ambiente\"&lt;br&gt;&lt;span style='color:#51cf66'&gt;2 semanas / resultado mensuravel&lt;/span&gt;"</span>
+  }
+}
+        </div>
+
+        <div class="diagram-idea">
+            <h5>Ideia de diagrama</h5>
+            <p><strong>Timeline comparativa:</strong> Linha do tempo horizontal. Acima: processo consultoria tradicional (research > analise > report > apresentacao > talvez implementacao). Abaixo: processo bora.now (sprint 1: deploy > sprint 2: iterate). Mostra que em 2 semanas bora.now ja esta onde a consultoria leva 6 meses.</p>
+            <div class="diagram-ascii">
+  Tradicional:  [Research]--[Analise]--[Report]--[Apresentacao]--[???]
+                |_____________ 6 meses __________________________|
+
+  bora.now:     [Sprint 1: Deploy]-[Sprint 2: Iterate]
+                |____ 4 semanas ____|
+            </div>
+        </div>
+
+    </div>
+</details>
+
+<!-- ============================================================ -->
+<!-- ARGUMENTO 3 -->
+<!-- ============================================================ -->
+<h2 class="section-title" id="arg3">3. "Cobra por entrega, nao por hora"</h2>
+
+<details>
+    <summary>Pesquisa e dados</summary>
+    <div class="content">
+        <p><span class="tag pain">dor</span><span class="tag data">dado</span></p>
+        <ul>
+            <li><span class="stat">49%</span> dos contratos ainda baseados em headcount</li>
+            <li>Apenas <span class="stat">16%</span> dos lideres esperam manter modelo de hora em 2 anos</li>
+            <li>Apenas <span class="stat">~25%</span> dos fees da McKinsey ligados a outcomes</li>
+            <li>"Voce cobra por tempo, e quando o tempo desaparece, voce precisa mudar o modelo comercial"</li>
+        </ul>
+    </div>
+</details>
+
+<details class="slide-proposal">
+    <summary>Proposta de Slide: Metrics-grid com count-up dramatico</summary>
+    <div class="content">
+
+        <p><span class="tag slide">tipo: metrics-grid</span> <span class="tag slide">tema: dark</span></p>
+
+        <div class="slide-mockup">
+            <span class="mock-label">preview</span>
+            <div class="mock-medium" style="margin-bottom:1rem; text-align:center;">O modelo de cobranca por hora esta morrendo</div>
+            <div style="display:flex; justify-content:center; gap:3rem; text-align:center;">
+                <div>
+                    <div class="mock-stat" style="color:#ff6b6b;">49%</div>
+                    <div class="mock-small">contratos por headcount<br><em>hoje</em></div>
+                </div>
+                <div>
+                    <div class="mock-stat" style="font-size:2rem; color:#555; align-self:center;">&#8594;</div>
+                </div>
+                <div>
+                    <div class="mock-stat" style="color:#51cf66;">16%</div>
+                    <div class="mock-small">contratos por headcount<br><em>em 2 anos</em></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="anim-seq">
+            <h5>Sequencia de Animacao</h5>
+            <div class="anim-step"><span class="step-n">1</span><span class="step-desc">Titulo "O modelo de cobranca por hora esta morrendo" sobe</span><span class="step-anim">fade-up</span></div>
+            <div class="anim-step"><span class="step-n">2</span><span class="step-desc">Numero "49%" conta de 0 ate 49 (vermelho)</span><span class="step-anim">count-up</span></div>
+            <div class="anim-step"><span class="step-n">3</span><span class="step-desc">Seta aparece</span><span class="step-anim">fade-up</span></div>
+            <div class="anim-step"><span class="step-n">4</span><span class="step-desc">Numero "16%" conta de 0 ate 16 (verde) - queda dramatica</span><span class="step-anim">count-up</span></div>
+            <div class="anim-step"><span class="step-n">5</span><span class="step-desc">Labels aparecem embaixo de cada numero</span><span class="step-anim">fade-up</span></div>
+        </div>
+
+        <p style="margin:0.75rem 0; color:#74c0fc; font-size:0.85rem;"><strong>Texto otimizado do slide:</strong></p>
+        <p style="color:#ccc;">"O modelo de cobranca por hora esta morrendo." + metricas 49% &#8594; 16%</p>
+
+        <div class="code-block">
+{
+  <span class="ck">id</span>: <span class="cs">"pricing-shift"</span>,
+  <span class="ck">type</span>: <span class="cs">"metrics-grid"</span>,
+  <span class="ck">theme</span>: <span class="cs">"dark"</span>,
+  <span class="ck">content</span>: {
+    <span class="ck">title</span>: <span class="cs">"O modelo de cobranca por hora esta morrendo."</span>,
+    <span class="ck">metrics</span>: [
+      { <span class="ck">value</span>: <span class="cn">49</span>, <span class="ck">suffix</span>: <span class="cs">"%"</span>, <span class="ck">label</span>: <span class="cs">"contratos por headcount hoje"</span> },
+      { <span class="ck">value</span>: <span class="cn">16</span>, <span class="ck">suffix</span>: <span class="cs">"%"</span>, <span class="ck">label</span>: <span class="cs">"esperam manter em 2 anos"</span> },
+      { <span class="ck">value</span>: <span class="cn">25</span>, <span class="ck">suffix</span>: <span class="cs">"%"</span>, <span class="ck">label</span>: <span class="cs">"da McKinsey ligado a resultado"</span> }
+    ]
+  }
+}
+        </div>
+
+        <div class="diagram-idea">
+            <h5>Ideia de diagrama</h5>
+            <p><strong>Barra de progresso invertida:</strong> Barra horizontal que anima de 49% para 16% - mostrando visualmente a queda. Abaixo, texto: "A gente ja esta no 16%. Voce paga por sprint entregue."</p>
+        </div>
+
+    </div>
+</details>
+
+<!-- ============================================================ -->
+<!-- ARGUMENTO 4 -->
+<!-- ============================================================ -->
+<h2 class="section-title" id="arg4">4. "Time senior, nao piramide de estagiarios"</h2>
+
+<details>
+    <summary>Pesquisa e dados</summary>
+    <div class="content">
+        <p><span class="tag pain">dor</span><span class="tag data">dado</span></p>
+        <ul>
+            <li>Piramide tradicional: muitos juniores fazendo trabalho detalhado a precos premium</li>
+            <li>Clientes percebem consultores <strong>aprendendo no job</strong> - erode confianca</li>
+            <li>HBR propoe modelo "Obelisco" - mais enxuto, menos camadas</li>
+            <li>Unity Advisory opera com <strong>pods ageis de seniors</strong> + IA proprietaria</li>
+        </ul>
+    </div>
+</details>
+
+<details class="slide-proposal">
+    <summary>Proposta de Slide: Insights-split com diagrama de piramide</summary>
+    <div class="content">
+
+        <p><span class="tag slide">tipo: insights-split</span> <span class="tag slide">tema: dark</span></p>
+
+        <div class="slide-mockup">
+            <span class="mock-label">preview</span>
+            <div style="display:flex; gap:2rem;">
+                <div style="flex:1;">
+                    <div class="mock-big" style="font-style:italic; font-size:1.4rem;">Quem trabalha<br>no seu projeto?</div>
+                </div>
+                <div style="flex:1;">
+                    <div class="mock-small" style="color:#ff6b6b;">&#9679; Consultoria tradicional</div>
+                    <div class="mock-small">1 senior vende, 8 juniores executam</div>
+                    <div class="mock-small" style="color:#51cf66; margin-top:0.5rem;">&#9679; bora.now</div>
+                    <div class="mock-small">3 especialistas + IA = 10x output</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="anim-seq">
+            <h5>Sequencia de Animacao</h5>
+            <div class="anim-step"><span class="step-n">1</span><span class="step-desc">Titulo italico "Quem trabalha no seu projeto?" desliza da esquerda</span><span class="step-anim">fade-right</span></div>
+            <div class="anim-step"><span class="step-n">2</span><span class="step-desc">Primeiro insight: "1 senior vende, 8 juniores executam" (vermelho)</span><span class="step-anim">fade-up</span></div>
+            <div class="anim-step"><span class="step-n">3</span><span class="step-desc">Segundo insight: "3 especialistas + IA = 10x output" (verde)</span><span class="step-anim">fade-up</span></div>
+        </div>
+
+        <p style="margin:0.75rem 0; color:#74c0fc; font-size:0.85rem;"><strong>Texto otimizado do slide:</strong></p>
+        <p style="color:#ccc;"><strong>Titulo:</strong> "Quem trabalha no seu projeto?"<br><strong>Item 1:</strong> Consultoria tradicional: 1 senior vende, 8 juniores executam<br><strong>Item 2:</strong> bora.now: 3 especialistas + IA = 10x output</p>
+
+        <div class="code-block">
+{
+  <span class="ck">id</span>: <span class="cs">"time-senior"</span>,
+  <span class="ck">type</span>: <span class="cs">"insights-split"</span>,
+  <span class="ck">theme</span>: <span class="cs">"dark"</span>,
+  <span class="ck">content</span>: {
+    <span class="ck">title</span>: <span class="cs">"Quem trabalha\nno seu projeto?"</span>,
+    <span class="ck">items</span>: [
+      { <span class="ck">heading</span>: <span class="cs">"Consultoria tradicional"</span>, <span class="ck">text</span>: <span class="cs">"1 senior vende. 8 juniores executam. Aprendem no seu projeto."</span> },
+      { <span class="ck">heading</span>: <span class="cs">"bora.now"</span>, <span class="ck">text</span>: <span class="cs">"3 especialistas + IA. 10x output. Zero aprendizado no seu custo."</span> }
+    ]
+  }
+}
+        </div>
+
+        <div class="diagram-idea">
+            <h5>Ideia de diagrama</h5>
+            <p><strong>Piramide vs Obelisco:</strong> Esquerda: piramide larga na base (muitos juniores, poucos seniors no topo). Direita: retangulo estreito e alto (poucos, todos senior). Animacao: piramide faz morph para obelisco.</p>
+            <div class="diagram-ascii">
+  Tradicional:        bora.now:
+      /\               ||
+     /  \              ||
+    / Jr \             || Senior
+   / Jr Jr\            || Senior
+  / Jr Jr Jr\          || Senior
+  ___________          || + IA
+            </div>
+        </div>
+
+    </div>
+</details>
+
+<!-- ============================================================ -->
+<!-- ARGUMENTO 5 -->
+<!-- ============================================================ -->
+<h2 class="section-title" id="arg5">5. "Velocidade de startup, experiencia enterprise"</h2>
+
+<details>
+    <summary>Pesquisa e dados</summary>
+    <div class="content">
+        <p><span class="tag opportunity">oportunidade</span><span class="tag data">dado</span></p>
+        <ul>
+            <li>Aumento de <span class="stat">38%</span> na demanda por consultoria baseada em sprints</li>
+            <li>Clientes exigem pilotos de <span class="stat">8-12 semanas</span> com ROI claro</li>
+            <li>Mercado de consultoria IA cresce <span class="stat">26.2% ao ano</span></li>
+            <li>Consultorias de execucao crescem <span class="stat">2x mais rapido</span> que as de estrategia pura</li>
+        </ul>
+    </div>
+</details>
+
+<details class="slide-proposal">
+    <summary>Proposta de Slide: Statement em 2 tempos</summary>
+    <div class="content">
+
+        <p><span class="tag slide">tipo: statement</span> <span class="tag slide">tema: accent</span></p>
+
+        <div class="slide-mockup" style="background:#0d0d08;">
+            <span class="mock-label">preview</span>
+            <div class="mock-big">Enquanto eles escrevem o escopo,</div>
+            <div class="mock-big" style="margin-top:0.5rem;">a gente ja fez deploy.</div>
+        </div>
+
+        <div class="anim-seq">
+            <h5>Sequencia de Animacao</h5>
+            <div class="anim-step"><span class="step-n">1</span><span class="step-desc">"Enquanto eles escrevem o escopo," typewriter lento (tensao)</span><span class="step-anim">typewriter</span></div>
+            <div class="anim-step"><span class="step-n">2</span><span class="step-desc">Pausa dramatica (1.2s) - cursor piscando</span></div>
+            <div class="anim-step"><span class="step-n">3</span><span class="step-desc">"a gente ja fez deploy." aparece de uma vez, bold, scale-in com impacto</span><span class="step-anim">scale-in</span></div>
+        </div>
+
+        <p style="margin:0.75rem 0; color:#74c0fc; font-size:0.85rem;"><strong>Texto otimizado do slide:</strong></p>
+        <p style="color:#ccc;">"Enquanto eles escrevem o escopo, a gente ja fez deploy."</p>
+
+        <div class="code-block">
+{
+  <span class="ck">id</span>: <span class="cs">"velocidade"</span>,
+  <span class="ck">type</span>: <span class="cs">"statement"</span>,
+  <span class="ck">theme</span>: <span class="cs">"accent"</span>,
+  <span class="ck">content</span>: {
+    <span class="ck">text</span>: <span class="cs">"Enquanto eles escrevem o escopo, a gente ja fez deploy."</span>,
+    <span class="ck">emojis</span>: { <span class="cs">"deploy."</span>: <span class="cs">"&#128640;"</span> }
+  }
+}
+        </div>
+
+        <div class="diagram-idea">
+            <h5>Ideia de diagrama</h5>
+            <p><strong>Racing lanes:</strong> Duas faixas horizontais como corrida. Faixa "Consultoria" esta no ponto "Escopo" (20%). Faixa "bora.now" ja esta no ponto "Em producao" (90%). Animacao: as barras preenchem com velocidades diferentes - bora.now dispara.</p>
+        </div>
+
+    </div>
+</details>
+
+<!-- ============================================================ -->
+<!-- ARGUMENTO 6 -->
+<!-- ============================================================ -->
+<h2 class="section-title" id="arg6">6. "Transparencia total, nao caixa preta"</h2>
+
+<details>
+    <summary>Pesquisa e dados</summary>
+    <div class="content">
+        <p><span class="tag opportunity">oportunidade</span><span class="tag data">dado</span></p>
+        <ul>
+            <li><span class="stat">73%</span> dos clientes esperam visibilidade em tempo real</li>
+            <li>Scope creep e expectativas desalinhadas sao as maiores fontes de tensao</li>
+            <li>Mercado caminha para modelos ageis com outcome-based delivery</li>
+        </ul>
+    </div>
+</details>
+
+<details class="slide-proposal">
+    <summary>Proposta de Slide: Chat-statement simulando interacao real</summary>
+    <div class="content">
+
+        <p><span class="tag slide">tipo: chat-statement</span> <span class="tag slide">tema: dark</span></p>
+
+        <div class="slide-mockup">
+            <span class="mock-label">preview</span>
+            <div style="display:flex; gap:2rem;">
+                <div style="flex:1;">
+                    <div class="mock-big" style="font-size:1.3rem;">Voce sabe exatamente o que esta acontecendo. Sempre.</div>
+                </div>
+                <div style="flex:1; font-size:0.8rem;">
+                    <div style="background:#1a2a1a; padding:0.5rem; border-radius:6px; margin-bottom:0.3rem; color:#51cf66;">Sprint 2 - Dia 3</div>
+                    <div style="background:#1a1a2a; padding:0.5rem; border-radius:6px; margin-bottom:0.3rem; color:#74c0fc;">API de pagamento integrada. Testes passando.</div>
+                    <div style="background:#222; padding:0.5rem; border-radius:6px; color:#aaa;">Posso ver o dashboard?</div>
+                    <div style="background:#1a1a2a; padding:0.5rem; border-radius:6px; margin-top:0.3rem; color:#74c0fc;">Claro: app.boranow.com/seu-projeto</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="anim-seq">
+            <h5>Sequencia de Animacao</h5>
+            <div class="anim-step"><span class="step-n">1</span><span class="step-desc">Texto esquerda typewriter: "Voce sabe exatamente..."</span><span class="step-anim">typewriter</span></div>
+            <div class="anim-step"><span class="step-n">2</span><span class="step-desc">Chat bubble: "Sprint 2 - Dia 3" (bot)</span><span class="step-anim">chat-bubble</span></div>
+            <div class="anim-step"><span class="step-n">3</span><span class="step-desc">Chat bubble: "API integrada. Testes passando." (bot)</span><span class="step-anim">chat-bubble</span></div>
+            <div class="anim-step"><span class="step-n">4</span><span class="step-desc">Typing indicator...</span><span class="step-anim">chat-typing</span></div>
+            <div class="anim-step"><span class="step-n">5</span><span class="step-desc">Chat bubble: "Posso ver o dashboard?" (user)</span><span class="step-anim">chat-bubble</span></div>
+            <div class="anim-step"><span class="step-n">6</span><span class="step-desc">Chat bubble: "Claro: app.boranow.com/seu-projeto" (bot)</span><span class="step-anim">chat-bubble</span></div>
+        </div>
+
+        <p style="margin:0.75rem 0; color:#74c0fc; font-size:0.85rem;"><strong>Texto otimizado do slide:</strong></p>
+        <p style="color:#ccc;">"Voce sabe exatamente o que esta acontecendo. Sempre."</p>
+
+        <div class="code-block">
+{
+  <span class="ck">id</span>: <span class="cs">"transparencia"</span>,
+  <span class="ck">type</span>: <span class="cs">"chat-statement"</span>,
+  <span class="ck">theme</span>: <span class="cs">"dark"</span>,
+  <span class="ck">content</span>: {
+    <span class="ck">text</span>: <span class="cs">"Voce sabe exatamente o que esta acontecendo. Sempre."</span>,
+    <span class="ck">subtitle</span>: <span class="cs">"Updates em tempo real"</span>,
+    <span class="ck">chat</span>: [
+      { <span class="ck">from</span>: <span class="cs">"bot"</span>, <span class="ck">text</span>: <span class="cs">"Sprint 2 - Dia 3"</span> },
+      { <span class="ck">from</span>: <span class="cs">"bot"</span>, <span class="ck">text</span>: <span class="cs">"API de pagamento integrada. Testes passando."</span> },
+      { <span class="ck">from</span>: <span class="cs">"user"</span>, <span class="ck">text</span>: <span class="cs">"Posso ver o dashboard?"</span> },
+      { <span class="ck">from</span>: <span class="cs">"bot"</span>, <span class="ck">text</span>: <span class="cs">"Claro: app.boranow.com/seu-projeto"</span> }
+    ]
+  }
+}
+        </div>
+
+        <div class="diagram-idea">
+            <h5>Ideia de diagrama</h5>
+            <p><strong>Dashboard mockup:</strong> Feature-mockup com tela de laptop mostrando um dashboard com barras de progresso por sprint, status verde/amarelo, e metricas de entrega. Comunica visualmente "voce ve tudo".</p>
+        </div>
+
+    </div>
+</details>
+
+<!-- ============================================================ -->
+<!-- ARGUMENTO 7 -->
+<!-- ============================================================ -->
+<h2 class="section-title" id="arg7">7. "Sob medida, nao framework generico"</h2>
+
+<details>
+    <summary>Pesquisa e dados</summary>
+    <div class="content">
+        <p><span class="tag pain">dor</span></p>
+        <ul>
+            <li>Frameworks desenhados para empresas 10.000+ aplicados em empresas de 50 pessoas</li>
+            <li>Clientes exigem resultados mensuraveis ao inves de frameworks teoricos</li>
+            <li>Solucoes one-size-fits-all rejeitadas pelo mercado</li>
+        </ul>
+    </div>
+</details>
+
+<details class="slide-proposal">
+    <summary>Proposta de Slide: Statement com revelacao parcial</summary>
+    <div class="content">
+
+        <p><span class="tag slide">tipo: statement</span> <span class="tag slide">tema: light</span></p>
+
+        <div class="slide-mockup" style="background:#f0ede6;">
+            <span class="mock-label" style="color:#aaa;">preview</span>
+            <div class="mock-medium" style="color:#999;">Frameworks da McKinsey foram feitos pra empresas de 10.000 pessoas.</div>
+            <div class="mock-big" style="color:#1a1a1a; margin-top:0.75rem;">E a sua?</div>
+        </div>
+
+        <div class="anim-seq">
+            <h5>Sequencia de Animacao</h5>
+            <div class="anim-step"><span class="step-n">1</span><span class="step-desc">"Frameworks da McKinsey foram feitos pra empresas de 10.000 pessoas." typewriter em cinza claro</span><span class="step-anim">typewriter</span></div>
+            <div class="anim-step"><span class="step-n">2</span><span class="step-desc">Pausa longa (1.5s) - deixa o viewer processar</span></div>
+            <div class="anim-step"><span class="step-n">3</span><span class="step-desc">"E a sua?" aparece grande, preto, centralizado - scale-in com peso</span><span class="step-anim">scale-in</span></div>
+        </div>
+
+        <p style="margin:0.75rem 0; color:#74c0fc; font-size:0.85rem;"><strong>Texto otimizado do slide:</strong></p>
+        <p style="color:#ccc;">"Frameworks da McKinsey foram feitos pra empresas de 10.000 pessoas. E a sua?"</p>
+
+        <div class="code-block">
+{
+  <span class="ck">id</span>: <span class="cs">"sob-medida"</span>,
+  <span class="ck">type</span>: <span class="cs">"statement"</span>,
+  <span class="ck">theme</span>: <span class="cs">"light"</span>,
+  <span class="ck">content</span>: {
+    <span class="ck">text</span>: <span class="cs">"Frameworks da McKinsey foram feitos pra empresas de 10.000 pessoas. E a sua?"</span>,
+    <span class="ck">emojis</span>: {}
+  }
+}
+        </div>
+
+        <div class="diagram-idea">
+            <h5>Ideia de diagrama</h5>
+            <p><strong>Escala absurda:</strong> Ilustracao de um terno gigante (framework corporativo) vestido em uma pessoa pequena (empresa do cliente). O terno e absurdamente grande - comunica visualmente que o framework nao serve. Pode ser SVG simples ou ate animacao de clip-path revelando o contraste.</p>
+        </div>
+
+    </div>
+</details>
+
+<!-- ============================================================ -->
+<!-- ARGUMENTO 8 -->
+<!-- ============================================================ -->
+<h2 class="section-title" id="arg8">8. "Construir capacidade, nao dependencia"</h2>
+
+<details>
+    <summary>Pesquisa e dados</summary>
+    <div class="content">
+        <p><span class="tag opportunity">oportunidade</span></p>
+        <ul>
+            <li>Clientes querem que a consultoria va embora e o resultado fique</li>
+            <li>Foco em <strong>capability building</strong> e transferencia de conhecimento</li>
+            <li><span class="stat">65% das Fortune 500</span> ja adotam modelo de retainer - mas querem autonomia crescente</li>
+            <li>Empresas tech-savvy estao construindo capacidade interna de IA</li>
+        </ul>
+    </div>
+</details>
+
+<details class="slide-proposal">
+    <summary>Proposta de Slide: Insights-list com narrativa de saida</summary>
+    <div class="content">
+
+        <p><span class="tag slide">tipo: insights-list</span> <span class="tag slide">tema: dark</span></p>
+
+        <div class="slide-mockup">
+            <span class="mock-label">preview</span>
+            <div class="mock-big" style="font-size:1.3rem; margin-bottom:1rem;">Nosso objetivo e voce nao precisar mais da gente.</div>
+            <div class="mock-small">&#9679; Semana 1-2: A gente lidera, seu time observa</div>
+            <div class="mock-small">&#9679; Semana 3-4: Seu time lidera, a gente apoia</div>
+            <div class="mock-small">&#9679; Semana 5+: Seu time voa solo. A gente so valida.</div>
+        </div>
+
+        <div class="anim-seq">
+            <h5>Sequencia de Animacao</h5>
+            <div class="anim-step"><span class="step-n">1</span><span class="step-desc">Titulo "Nosso objetivo e voce nao precisar mais da gente." fade-up</span><span class="step-anim">fade-up</span></div>
+            <div class="anim-step"><span class="step-n">2</span><span class="step-desc">Item 1: "A gente lidera, seu time observa" fade-up</span><span class="step-anim">fade-up</span></div>
+            <div class="anim-step"><span class="step-n">3</span><span class="step-desc">Item 2: "Seu time lidera, a gente apoia" fade-up</span><span class="step-anim">fade-up</span></div>
+            <div class="anim-step"><span class="step-n">4</span><span class="step-desc">Item 3: "Seu time voa solo." fade-up com destaque verde</span><span class="step-anim">fade-up</span></div>
+        </div>
+
+        <p style="margin:0.75rem 0; color:#74c0fc; font-size:0.85rem;"><strong>Texto otimizado do slide:</strong></p>
+        <p style="color:#ccc;">"Nosso objetivo e voce nao precisar mais da gente."<br>3 fases: observa > lidera > voa solo</p>
+
+        <div class="code-block">
+{
+  <span class="ck">id</span>: <span class="cs">"capacidade"</span>,
+  <span class="ck">type</span>: <span class="cs">"insights-list"</span>,
+  <span class="ck">theme</span>: <span class="cs">"dark"</span>,
+  <span class="ck">content</span>: {
+    <span class="ck">title</span>: <span class="cs">"Nosso objetivo e voce nao precisar mais da gente."</span>,
+    <span class="ck">items</span>: [
+      { <span class="ck">heading</span>: <span class="cs">"Semana 1-2"</span>, <span class="ck">text</span>: <span class="cs">"A gente lidera, seu time observa."</span> },
+      { <span class="ck">heading</span>: <span class="cs">"Semana 3-4"</span>, <span class="ck">text</span>: <span class="cs">"Seu time lidera, a gente apoia."</span> },
+      { <span class="ck">heading</span>: <span class="cs">"Semana 5+"</span>, <span class="ck">text</span>: <span class="cs">"Seu time voa solo. A gente so valida."</span> }
+    ]
+  }
+}
+        </div>
+
+        <div class="diagram-idea">
+            <h5>Ideia de diagrama</h5>
+            <p><strong>Gradiente de handoff:</strong> 3 barras horizontais empilhadas. Cada barra tem duas cores (bora.now azul / cliente verde). Na primeira barra, 80% azul 20% verde. Na segunda, 50/50. Na terceira, 20% azul 80% verde. Anima: cada barra preenche sequencialmente, mostrando a transicao de poder. Ultima barra brilha verde.</p>
+            <div class="diagram-ascii">
+  Sem 1-2:  [======== bora.now ========|== cliente ==]
+  Sem 3-4:  [==== bora.now ====|====== cliente ======]
+  Sem 5+:   [= bn =|============ cliente ============]
+            </div>
+        </div>
+
+    </div>
+</details>
+
+<!-- ============================================================ -->
+<!-- ARGUMENTO 9 -->
+<!-- ============================================================ -->
+<h2 class="section-title" id="arg9" style="border-left-color:#51cf66;">9. "Traga um lead, ganhe 20%"</h2>
+
+<details>
+    <summary>Pesquisa e dados - Programas de indicacao</summary>
+    <div class="content">
+        <p><span class="tag opportunity">oportunidade</span><span class="tag data">dado</span></p>
+        <ul>
+            <li>Comissao padrao em consultoria: <span class="stat">5-15%</span> do primeiro ano. Nossos <span class="stat">20%</span> estao no topo do mercado</li>
+            <li>Leads por indicacao convertem <span class="stat">4x mais</span> que cold outreach</li>
+            <li>Taxa de conversao de referral B2B: <span class="stat">11%</span> vs ~2.35% media de outros canais</li>
+            <li>Referrals fecham <span class="stat">38% mais rapido</span> que leads frios</li>
+            <li>Clientes vindos por indicacao tem <span class="stat">16-25% mais lifetime value</span></li>
+            <li><span class="stat">82% dos lideres de vendas B2B</span> concordam que indicacoes geram os melhores leads</li>
+            <li>Programas enterprise agressivos ja operam na faixa de <span class="stat">20-40%</span> para partners ativos</li>
+            <li>Plataformas como Legitt AI e Juro geram contratos em <strong>segundos</strong> - viabiliza registro imediato</li>
+        </ul>
+        <div class="insight-box">
+            <strong>Por que 20% funciona:</strong> Leads indicados custam menos (sem ads), convertem mais (4x), ficam mais tempo (25% mais LTV), e fecham mais rapido (38%). O 20% se paga com sobra. E diferencia a gente de qualquer outro programa de indicacao no mercado.
+        </div>
+    </div>
+</details>
+
+<details class="slide-proposal">
+    <summary>Proposta de Slide A: Statement com numero de impacto</summary>
+    <div class="content">
+
+        <p><span class="tag slide">tipo: statement</span> <span class="tag slide">tema: dark</span></p>
+
+        <div class="slide-mockup">
+            <span class="mock-label">preview</span>
+            <div class="mock-medium" style="color:#888;">Conhece alguem que precisa de tecnologia?</div>
+            <div class="mock-big" style="margin-top:0.5rem;">Apresenta pra gente.</div>
+            <div class="mock-stat" style="color:#51cf66; margin-top:0.75rem;">20%</div>
+            <div class="mock-medium" style="color:#51cf66;">do contrato e seu.</div>
+        </div>
+
+        <div class="anim-seq">
+            <h5>Sequencia de Animacao</h5>
+            <div class="anim-step"><span class="step-n">1</span><span class="step-desc">"Conhece alguem que precisa de tecnologia?" typewriter em cinza</span><span class="step-anim">typewriter</span></div>
+            <div class="anim-step"><span class="step-n">2</span><span class="step-desc">"Apresenta pra gente." aparece bold, branco</span><span class="step-anim">fade-up</span></div>
+            <div class="anim-step"><span class="step-n">3</span><span class="step-desc">Pausa dramatica (1s)</span></div>
+            <div class="anim-step"><span class="step-n">4</span><span class="step-desc">"20%" scale-in ENORME em verde - protagonista da tela</span><span class="step-anim">scale-in</span></div>
+            <div class="anim-step"><span class="step-n">5</span><span class="step-desc">"do contrato e seu." fade-up em verde abaixo do numero</span><span class="step-anim">fade-up</span></div>
+        </div>
+
+        <p style="margin:0.75rem 0; color:#74c0fc; font-size:0.85rem;"><strong>Texto otimizado do slide:</strong></p>
+        <p style="color:#ccc;">"Conhece alguem que precisa de tecnologia? Apresenta pra gente. 20% do contrato e seu."</p>
+
+        <div class="code-block">
+{
+  <span class="ck">id</span>: <span class="cs">"programa-indicacao"</span>,
+  <span class="ck">type</span>: <span class="cs">"statement"</span>,
+  <span class="ck">theme</span>: <span class="cs">"dark"</span>,
+  <span class="ck">content</span>: {
+    <span class="ck">text</span>: <span class="cs">"Conhece alguem que precisa de tecnologia? Apresenta pra gente. 20% do contrato e seu."</span>,
+    <span class="ck">emojis</span>: { <span class="cs">"20%"</span>: <span class="cs">"&#128176;"</span> }
+  }
+}
+        </div>
+
+    </div>
+</details>
+
+<details class="slide-proposal">
+    <summary>Proposta de Slide B: Como funciona (3 passos)</summary>
+    <div class="content">
+
+        <p><span class="tag slide">tipo: insights-list</span> <span class="tag slide">tema: dark</span></p>
+
+        <div class="slide-mockup">
+            <span class="mock-label">preview</span>
+            <div class="mock-big" style="font-size:1.2rem; margin-bottom:1rem;">Simples assim.</div>
+            <div class="mock-small"><span style="color:#51cf66; font-weight:700; font-size:1.1rem;">1</span>&nbsp;&nbsp; Indica o contato</div>
+            <div class="mock-small" style="color:#888;">Um nome, um email, um Whatsapp. Pronto.</div>
+            <div class="mock-small" style="margin-top:0.5rem;"><span style="color:#51cf66; font-weight:700; font-size:1.1rem;">2</span>&nbsp;&nbsp; IA gera o contrato na hora</div>
+            <div class="mock-small" style="color:#888;">Fechou? Contrato com seu nome registrado automaticamente.</div>
+            <div class="mock-small" style="margin-top:0.5rem;"><span style="color:#51cf66; font-weight:700; font-size:1.1rem;">3</span>&nbsp;&nbsp; 20% cai na sua conta</div>
+            <div class="mock-small" style="color:#888;">Sem burocracia, sem correr atras, sem "vamos ver".</div>
+        </div>
+
+        <div class="anim-seq">
+            <h5>Sequencia de Animacao</h5>
+            <div class="anim-step"><span class="step-n">1</span><span class="step-desc">"Simples assim." fade-up</span><span class="step-anim">fade-up</span></div>
+            <div class="anim-step"><span class="step-n">2</span><span class="step-desc">Passo 1: "Indica o contato" + subtexto fade-up</span><span class="step-anim">fade-up</span></div>
+            <div class="anim-step"><span class="step-n">3</span><span class="step-desc">Passo 2: "IA gera o contrato na hora" fade-up</span><span class="step-anim">fade-up</span></div>
+            <div class="anim-step"><span class="step-n">4</span><span class="step-desc">Passo 3: "20% cai na sua conta" fade-up - numero 20% pulsa em verde</span><span class="step-anim">fade-up</span></div>
+        </div>
+
+        <p style="margin:0.75rem 0; color:#74c0fc; font-size:0.85rem;"><strong>Texto otimizado do slide:</strong></p>
+        <p style="color:#ccc;"><strong>1.</strong> Indica o contato (nome, email, Whatsapp)<br><strong>2.</strong> IA gera o contrato na hora, com seu nome registrado<br><strong>3.</strong> 20% cai na sua conta. Sem burocracia.</p>
+
+        <div class="code-block">
+{
+  <span class="ck">id</span>: <span class="cs">"como-funciona-indicacao"</span>,
+  <span class="ck">type</span>: <span class="cs">"insights-list"</span>,
+  <span class="ck">theme</span>: <span class="cs">"dark"</span>,
+  <span class="ck">content</span>: {
+    <span class="ck">title</span>: <span class="cs">"Simples assim."</span>,
+    <span class="ck">items</span>: [
+      { <span class="ck">heading</span>: <span class="cs">"1. Indica o contato"</span>, <span class="ck">text</span>: <span class="cs">"Um nome, um email, um WhatsApp. Pronto."</span> },
+      { <span class="ck">heading</span>: <span class="cs">"2. IA gera o contrato na hora"</span>, <span class="ck">text</span>: <span class="cs">"Fechou? Contrato com seu nome registrado automaticamente."</span> },
+      { <span class="ck">heading</span>: <span class="cs">"3. 20% cai na sua conta"</span>, <span class="ck">text</span>: <span class="cs">"Sem burocracia, sem correr atras, sem 'vamos ver'."</span> }
+    ]
+  }
+}
+        </div>
+
+    </div>
+</details>
+
+<details class="slide-proposal">
+    <summary>Proposta de Slide C: Chat simulando uma indicacao real</summary>
+    <div class="content">
+
+        <p><span class="tag slide">tipo: chat-statement</span> <span class="tag slide">tema: dark</span></p>
+
+        <div class="slide-mockup">
+            <span class="mock-label">preview</span>
+            <div style="display:flex; gap:2rem;">
+                <div style="flex:1;">
+                    <div class="mock-big" style="font-size:1.2rem;">Na pratica, e assim.</div>
+                </div>
+                <div style="flex:1; font-size:0.8rem;">
+                    <div style="background:#222; padding:0.5rem; border-radius:6px; margin-bottom:0.3rem; color:#aaa;">Tenho um amigo que precisa de um app. Posso passar o contato?</div>
+                    <div style="background:#1a1a2a; padding:0.5rem; border-radius:6px; margin-bottom:0.3rem; color:#74c0fc;">Claro! Manda o nome e WhatsApp dele.</div>
+                    <div style="background:#222; padding:0.5rem; border-radius:6px; margin-bottom:0.3rem; color:#aaa;">Joao Silva, (11) 99999-0000</div>
+                    <div style="background:#1a1a2a; padding:0.5rem; border-radius:6px; margin-bottom:0.3rem; color:#74c0fc;">Pronto. Joao ta no sistema. Se fechar, 20% do contrato e seu. Vou entrar em contato agora.</div>
+                    <div style="background:#1a2a1a; padding:0.5rem; border-radius:6px; color:#51cf66; font-weight:600; margin-top:0.5rem;">&#9989; Lead registrado: Joao Silva - App mobile - Indicado por voce</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="anim-seq">
+            <h5>Sequencia de Animacao</h5>
+            <div class="anim-step"><span class="step-n">1</span><span class="step-desc">"Na pratica, e assim." typewriter</span><span class="step-anim">typewriter</span></div>
+            <div class="anim-step"><span class="step-n">2</span><span class="step-desc">User: "Tenho um amigo que precisa de um app..."</span><span class="step-anim">chat-bubble</span></div>
+            <div class="anim-step"><span class="step-n">3</span><span class="step-desc">Typing indicator...</span><span class="step-anim">chat-typing</span></div>
+            <div class="anim-step"><span class="step-n">4</span><span class="step-desc">Bot: "Claro! Manda o nome e WhatsApp dele."</span><span class="step-anim">chat-bubble</span></div>
+            <div class="anim-step"><span class="step-n">5</span><span class="step-desc">User: "Joao Silva, (11) 99999-0000"</span><span class="step-anim">chat-bubble</span></div>
+            <div class="anim-step"><span class="step-n">6</span><span class="step-desc">Typing indicator...</span><span class="step-anim">chat-typing</span></div>
+            <div class="anim-step"><span class="step-n">7</span><span class="step-desc">Bot: "Pronto. Se fechar, 20% e seu."</span><span class="step-anim">chat-bubble</span></div>
+            <div class="anim-step"><span class="step-n">8</span><span class="step-desc">Confirmacao verde: "Lead registrado" - aparece com borda verde pulsando</span><span class="step-anim">scale-in</span></div>
+        </div>
+
+        <p style="margin:0.75rem 0; color:#74c0fc; font-size:0.85rem;"><strong>Texto otimizado do slide:</strong></p>
+        <p style="color:#ccc;">"Na pratica, e assim." + conversa real mostrando como e facil indicar</p>
+
+        <div class="code-block">
+{
+  <span class="ck">id</span>: <span class="cs">"indicacao-chat"</span>,
+  <span class="ck">type</span>: <span class="cs">"chat-statement"</span>,
+  <span class="ck">theme</span>: <span class="cs">"dark"</span>,
+  <span class="ck">content</span>: {
+    <span class="ck">text</span>: <span class="cs">"Na pratica, e assim."</span>,
+    <span class="ck">subtitle</span>: <span class="cs">"Programa de indicacao bora.now"</span>,
+    <span class="ck">chat</span>: [
+      { <span class="ck">from</span>: <span class="cs">"user"</span>, <span class="ck">text</span>: <span class="cs">"Tenho um amigo que precisa de um app. Posso passar o contato?"</span> },
+      { <span class="ck">from</span>: <span class="cs">"bot"</span>, <span class="ck">text</span>: <span class="cs">"Claro! Manda o nome e WhatsApp dele."</span> },
+      { <span class="ck">from</span>: <span class="cs">"user"</span>, <span class="ck">text</span>: <span class="cs">"Joao Silva, (11) 99999-0000"</span> },
+      { <span class="ck">from</span>: <span class="cs">"bot"</span>, <span class="ck">text</span>: <span class="cs">"Pronto. Joao ta no sistema.\nSe fechar, 20% do contrato e seu.\nVou entrar em contato agora."</span> }
+    ]
+  }
+}
+        </div>
+
+        <div class="diagram-idea">
+            <h5>Ideia de diagrama</h5>
+            <p><strong>Fluxo visual de 3 nos:</strong> Voce (icone pessoa) --[seta: indica]--> bora.now (logo) --[seta: fecha]--> Cliente (icone empresa). Abaixo do fluxo, seta pontilhada verde voltando de bora.now pra Voce com "20%". Simples, visual, mostra que o vendedor nao precisa fazer nada alem de conectar.</p>
+            <div class="diagram-ascii">
+  [Voce]  ---indica--->  [bora.now]  ---fecha--->  [Cliente]
+     ^                       |
+     |______ 20% ____________|
+            </div>
+        </div>
+
+    </div>
+</details>
+
+<details class="slide-proposal">
+    <summary>Proposta de Slide D: Metricas que justificam os 20%</summary>
+    <div class="content">
+
+        <p><span class="tag slide">tipo: metrics-grid</span> <span class="tag slide">tema: dark</span></p>
+
+        <div class="slide-mockup">
+            <span class="mock-label">preview</span>
+            <div class="mock-medium" style="text-align:center; margin-bottom:1rem;">Por que 20%? Porque indicacao funciona.</div>
+            <div style="display:flex; justify-content:center; gap:2.5rem; text-align:center;">
+                <div>
+                    <div class="mock-stat" style="font-size:2.2rem; color:#51cf66;">4x</div>
+                    <div class="mock-small">mais conversao<br>que cold outreach</div>
+                </div>
+                <div>
+                    <div class="mock-stat" style="font-size:2.2rem; color:#51cf66;">38%</div>
+                    <div class="mock-small">mais rapido<br>pra fechar</div>
+                </div>
+                <div>
+                    <div class="mock-stat" style="font-size:2.2rem; color:#51cf66;">25%</div>
+                    <div class="mock-small">mais lifetime<br>value</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="anim-seq">
+            <h5>Sequencia de Animacao</h5>
+            <div class="anim-step"><span class="step-n">1</span><span class="step-desc">"Por que 20%? Porque indicacao funciona." fade-up</span><span class="step-anim">fade-up</span></div>
+            <div class="anim-step"><span class="step-n">2</span><span class="step-desc">"4x" count-up de 0 a 4</span><span class="step-anim">count-up</span></div>
+            <div class="anim-step"><span class="step-n">3</span><span class="step-desc">"38%" count-up de 0 a 38</span><span class="step-anim">count-up</span></div>
+            <div class="anim-step"><span class="step-n">4</span><span class="step-desc">"25%" count-up de 0 a 25</span><span class="step-anim">count-up</span></div>
+            <div class="anim-step"><span class="step-n">5</span><span class="step-desc">Labels aparecem em stagger abaixo de cada numero</span><span class="step-anim">fade-up</span></div>
+        </div>
+
+        <div class="code-block">
+{
+  <span class="ck">id</span>: <span class="cs">"por-que-20"</span>,
+  <span class="ck">type</span>: <span class="cs">"metrics-grid"</span>,
+  <span class="ck">theme</span>: <span class="cs">"dark"</span>,
+  <span class="ck">content</span>: {
+    <span class="ck">title</span>: <span class="cs">"Por que 20%? Porque indicacao funciona."</span>,
+    <span class="ck">metrics</span>: [
+      { <span class="ck">value</span>: <span class="cn">4</span>, <span class="ck">suffix</span>: <span class="cs">"x"</span>, <span class="ck">label</span>: <span class="cs">"mais conversao que cold outreach"</span> },
+      { <span class="ck">value</span>: <span class="cn">38</span>, <span class="ck">suffix</span>: <span class="cs">"%"</span>, <span class="ck">label</span>: <span class="cs">"mais rapido pra fechar"</span> },
+      { <span class="ck">value</span>: <span class="cn">25</span>, <span class="ck">suffix</span>: <span class="cs">"%"</span>, <span class="ck">label</span>: <span class="cs">"mais lifetime value"</span> }
+    ]
+  }
+}
+        </div>
+
+    </div>
+</details>
+
+<!-- ============================================================ -->
+<hr>
+<h2 class="section-title">Ordem sugerida dos slides na landing</h2>
+
+<details>
+    <summary>Flow completo recomendado</summary>
+    <div class="content">
+        <div class="anim-seq" style="background:transparent; border:none; padding:0;">
+            <div class="anim-step"><span class="step-n">01</span><span class="step-desc"><strong>Hero</strong> - "bora.now" (ja existe)</span></div>
+            <div class="anim-step"><span class="step-n">02</span><span class="step-desc"><strong>Statement</strong> - "Consultorias tradicionais entregam 200 slides..." (arg 1)</span></div>
+            <div class="anim-step"><span class="step-n">03</span><span class="step-desc"><strong>Two-cards</strong> - Consultoria 2015 vs bora.now 2026 (arg 2)</span></div>
+            <div class="anim-step"><span class="step-n">04</span><span class="step-desc"><strong>Metrics-grid</strong> - 49% -> 16% modelo de hora morrendo (arg 3)</span></div>
+            <div class="anim-step"><span class="step-n">05</span><span class="step-desc"><strong>Insights-split</strong> - Quem trabalha no seu projeto? (arg 4)</span></div>
+            <div class="anim-step"><span class="step-n">06</span><span class="step-desc"><strong>Statement</strong> - "Enquanto eles escrevem o escopo..." (arg 5)</span></div>
+            <div class="anim-step"><span class="step-n">07</span><span class="step-desc"><strong>Chat-statement</strong> - Transparencia com chat real (arg 6)</span></div>
+            <div class="anim-step"><span class="step-n">08</span><span class="step-desc"><strong>Statement</strong> - "Frameworks da McKinsey... E a sua?" (arg 7)</span></div>
+            <div class="anim-step"><span class="step-n">09</span><span class="step-desc"><strong>Insights-list</strong> - Capacidade, nao dependencia (arg 8)</span></div>
+            <div class="anim-step"><span class="step-n" style="color:#51cf66;">10</span><span class="step-desc"><strong>Section-divider</strong> - Breather: "E se voce tambem pudesse ganhar com isso?"</span></div>
+            <div class="anim-step"><span class="step-n" style="color:#51cf66;">11</span><span class="step-desc"><strong>Statement</strong> - "Apresenta pra gente. 20% do contrato e seu." (arg 9A)</span></div>
+            <div class="anim-step"><span class="step-n" style="color:#51cf66;">12</span><span class="step-desc"><strong>Insights-list</strong> - 3 passos: indica, contrato IA, 20% cai (arg 9B)</span></div>
+            <div class="anim-step"><span class="step-n" style="color:#51cf66;">13</span><span class="step-desc"><strong>Chat-statement</strong> - Simulacao de indicacao real no chat (arg 9C)</span></div>
+            <div class="anim-step"><span class="step-n">14</span><span class="step-desc"><strong>CTA-form</strong> - "bora." + email signup (ja existe)</span></div>
+        </div>
+        <p style="margin-top:1rem; color:#888; font-size:0.85rem;"><strong>Nota:</strong> Entre argumentos pesados, considerar section-dividers ou breathers com video background para dar ritmo e nao sobrecarregar.</p>
+    </div>
+</details>
+
+<!-- ============================================================ -->
+<hr>
+<h2 class="section-title">Fontes da pesquisa</h2>
+
+<details>
+    <summary>20+ artigos e reports (2025-2026)</summary>
+    <div class="content">
+        <ul>
+            <li>2026 Consulting's AI Revolution Update - futureofconsulting.ai</li>
+            <li>AI Is Changing the Structure of Consulting Firms - Harvard Business Review (Set 2025)</li>
+            <li>Consulting's 2026 Reckoning - WebProNews</li>
+            <li>Consulting in Crisis - National CIO Review</li>
+            <li>2026 Consulting Trends - Deltek</li>
+            <li>How AI Is Affecting Consulting: McKinsey Edition - Poets & Quants</li>
+            <li>Consulting's AI moment - IBM Newsroom</li>
+            <li>Is AI the end of consulting? - Fortune (Mar 2026)</li>
+            <li>Why the McKinsey layoffs are a warning signal - Fast Company</li>
+            <li>OpenAI launches consulting division - The Finance Story</li>
+            <li>Why Big 4 Failing Mid-Size Companies - DAS Advanced Systems</li>
+            <li>AI-Powered Consulting: 65% of Enterprises Survey - PR Newswire</li>
+            <li>The Technology Consulting Market 2025-2026 - Source Global Research</li>
+            <li>The AI consulting shake-up - Aspectus Group</li>
+        </ul>
+    </div>
+</details>
+
+</body>
+</html>

@@ -6,6 +6,7 @@ let total = 0;
 let sections = [];
 let isAnimating = false;
 let onChangeCallbacks = [];
+let onBeforeChangeCallbacks = [];
 
 const TRANSITION_DURATION = 0.9;
 const COOLDOWN = 900; // ms before next transition allowed
@@ -80,6 +81,8 @@ export function goTo(index) {
   if (isAnimating || index === current || index < 0 || index >= total) return;
   isAnimating = true;
 
+  onBeforeChangeCallbacks.forEach(cb => cb(index, current));
+
   const gsap = window.gsap;
   const from = sections[current];
   const to = sections[index];
@@ -131,4 +134,8 @@ export function getCurrent() {
 
 export function onChange(cb) {
   onChangeCallbacks.push(cb);
+}
+
+export function onBeforeChange(cb) {
+  onBeforeChangeCallbacks.push(cb);
 }

@@ -3,7 +3,7 @@
 import { applyTheme } from './themes.js';
 import { renderSlide } from './templates.js';
 import { buildTimeline } from './animations.js';
-import { initScroll, onChange } from './scroll.js';
+import { initScroll, onChange, onBeforeChange } from './scroll.js';
 import { themes } from './themes.js';
 import { fitAll } from './fit-text.js';
 
@@ -91,5 +91,13 @@ export class SlidesEngine {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => fitAll(main), 150);
     });
+  }
+
+  onChange(cb) {
+    onChange(cb);
+  }
+
+  onBeforeChange(cb) {
+    onBeforeChange(cb);
   }
 }
