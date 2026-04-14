@@ -896,10 +896,193 @@
       display: block;
     }
 
+    /* ── Hamburger menu (top-right) ── */
+    #hamburger-menu {
+      position: fixed;
+      top: 28px;
+      right: 28px;
+      z-index: 60;
+      width: 36px;
+      height: 28px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    #hamburger-menu.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #hamburger-menu span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: rgba(240, 237, 230, 0.7);
+      border-radius: 1px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    #hamburger-menu.open span:nth-child(1) {
+      transform: rotate(45deg) translate(9px, 9px);
+    }
+    #hamburger-menu.open span:nth-child(2) {
+      opacity: 0;
+    }
+    #hamburger-menu.open span:nth-child(3) {
+      transform: rotate(-45deg) translate(9px, -9px);
+    }
+
+    /* Services menu panel (expandable) */
+    #services-menu-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 320px;
+      height: 100vh;
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(20px);
+      z-index: 55;
+      padding: 80px 28px 28px;
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    #services-menu-panel.open {
+      transform: translateX(0);
+    }
+    #services-menu-panel a {
+      display: block;
+      font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      font-size: 18px;
+      color: rgba(240, 237, 230, 0.7);
+      text-decoration: none;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(240, 237, 230, 0.1);
+      transition: color 0.2s ease;
+    }
+    #services-menu-panel a:hover {
+      color: rgba(240, 237, 230, 1);
+    }
+
+    /* ── Vanish system (reusable) ── */
+    .vanish-mask {
+      overflow: hidden;
+      line-height: 1.1;
+    }
+    .vanish-inner {
+      display: block;
+    }
+
+    /* ── Argument News (centered overlay) ── */
+    #argument-news {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3em;
+      padding: 0 6vw;
+    }
+    #argument-news .arg-line {
+      text-align: center;
+      width: 100%;
+    }
+    #argument-news .arg-text {
+      font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      font-size: clamp(28px, 5vw, 72px);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: rgba(240, 237, 230, 0.35);
+      line-height: 1.15;
+    }
+    #argument-news .arg-text em {
+      font-style: normal;
+      color: rgba(240, 237, 230, 0.6);
+    }
+    #argument-news .arg-text strong {
+      font-weight: 600;
+      color: rgba(240, 237, 230, 0.8);
+    }
+    #argument-news .arg-text .hl-max {
+      font-weight: 700;
+      color: rgba(240, 237, 230, 1.0);
+    }
+
+    /* ── Argument Tailormade (centered overlay) ── */
+    #argument-tailormade {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 6vw;
+    }
+    #argument-tailormade .tm-text {
+      font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      font-size: clamp(32px, 6vw, 80px);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: rgba(240, 237, 230, 0.7);
+      line-height: 1.15;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .slot-machine {
+      display: inline-block;
+      overflow: hidden;
+      vertical-align: bottom;
+      position: relative;
+    }
+    .slot-track {
+      display: flex;
+      flex-direction: column;
+      transition: none;
+    }
+    .slot-word {
+      display: block;
+      color: rgba(240, 237, 230, 1.0);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    /* ── Challenge (bottom-left, above bora.now) ── */
+    #challenge-text {
+      position: fixed;
+      bottom: calc(28px + clamp(80px, 18vw, 220px) * 0.82 * 2 + 20px);
+      left: 28px;
+      z-index: 50;
+      pointer-events: none;
+      text-align: left;
+    }
+    .challenge-line {
+      font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      font-size: clamp(24px, 4vw, 56px);
+      font-weight: 400;
+      color: rgba(240, 237, 230, 0.5);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      display: block;
+    }
+    .challenge-big {
+      font-size: clamp(48px, 8vw, 110px);
+      font-weight: 700;
+      color: rgba(240, 237, 230, 1.0);
+    }
+    .challenge-line .ch-letter {
+      display: inline-block;
+      opacity: 0;
+    }
+
     /* ── Video-visible slides ── */
     .slide-frame.video-visible {
-      background: rgba(10, 10, 10, 0.55) !important;
-      backdrop-filter: blur(2px);
+      background: transparent !important;
+      border-radius: 0;
     }
     .slide-frame.video-visible .hero-title,
     .slide-frame.video-visible .eyebrow,
@@ -970,11 +1153,32 @@
     </video>
   </div>
 
+  <!-- Hamburger menu (appears after services list vanishes) -->
+  <div id="hamburger-menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <!-- Services menu panel (slides in from right) -->
+  <div id="services-menu-panel">
+    <a href="#" data-service="it-services">IT Services</a>
+    <a href="#" data-service="creative-direction">Creative Direction</a>
+    <a href="#" data-service="ux-ui-design">UX / UI Design</a>
+    <a href="#" data-service="graphic-design">Graphic Design</a>
+    <a href="#" data-service="technology">Technology</a>
+    <a href="#" data-service="branding">Branding</a>
+    <a href="#" data-service="digital-strategy">Digital Strategy</a>
+    <a href="#" data-service="ai-integration">AI Integration</a>
+    <a href="#" data-service="web-development">Web Development</a>
+    <a href="#" data-service="data-analytics">Data & Analytics</a>
+  </div>
+
   <!-- Consulting label (bottom-right, aligned with bora.now bottom) -->
-  <div id="consulting-label"><span id="consulting-inner">consulting</span></div>
+  <div id="consulting-label" data-spec-id="consulting-label"><span id="consulting-inner">consulting</span></div>
 
   <!-- Services list (top-right, hidden initially) -->
-  <div id="services-list">
+  <div id="services-list" data-spec-id="services-list">
     <span class="svc-item"><span class="svc-inner">IT Services</span></span>
     <span class="svc-item"><span class="svc-inner">Creative Direction</span></span>
     <span class="svc-item"><span class="svc-inner">UX / UI Design</span></span>
@@ -987,8 +1191,27 @@
     <span class="svc-item"><span class="svc-inner">Data & Analytics</span></span>
   </div>
 
+  <!-- Argument News overlay (slide 2) -->
+  <div id="argument-news" data-spec-id="argument-news">
+    <div class="arg-line vanish-mask"><span class="vanish-inner arg-text">2026</span></div>
+    <div class="arg-line vanish-mask"><span class="vanish-inner arg-text"><em>AI</em> does <strong>work</strong></span></div>
+    <div class="arg-line vanish-mask"><span class="vanish-inner arg-text"><em>agencies</em> are too <strong>slow</strong></span></div>
+    <div class="arg-line vanish-mask"><span class="vanish-inner arg-text">you need a <em>digital partner</em> you <span class="hl-max">trust</span></span></div>
+  </div>
+
+  <!-- Argument Tailormade overlay (slide 3) -->
+  <div id="argument-tailormade" data-spec-id="argument-tailormade">
+    <div class="vanish-mask"><span class="vanish-inner tm-text">taylor made <span class="slot-machine"><span class="slot-track"></span></span></span></div>
+  </div>
+
+  <!-- Challenge overlay (slide 4) -->
+  <div id="challenge-text" data-spec-id="challenge-text">
+    <div class="challenge-line" id="challenge-line1"></div>
+    <div class="challenge-line challenge-big" id="challenge-line2"></div>
+  </div>
+
   <!-- Brand logo overlay — animates from full to abbreviated on scroll -->
-  <div id="brand-logo"><span class="brand-line"><span class="brand-char brand-keep">b</span><span class="brand-char brand-erase">o</span><span class="brand-char brand-erase">r</span><span class="brand-char brand-erase">a</span><span class="brand-char brand-keep">.</span></span><span class="brand-line"><span class="brand-char brand-keep">n</span><span class="brand-char brand-erase">o</span><span class="brand-char brand-erase">w</span><span class="brand-char brand-keep">.</span></span></div>
+  <div id="brand-logo" data-spec-id="brand-logo"><span class="brand-line"><span class="brand-char brand-keep">b</span><span class="brand-char brand-erase">o</span><span class="brand-char brand-erase">r</span><span class="brand-char brand-erase">a</span><span class="brand-char brand-keep">.</span></span><span class="brand-line"><span class="brand-char brand-keep">n</span><span class="brand-char brand-erase">o</span><span class="brand-char brand-erase">w</span><span class="brand-char brand-keep">.</span></span></div>
 
   <main></main>
 
@@ -999,177 +1222,379 @@
     import { config } from './slides-data.js';
     import { SlidesEngine } from './engine/core.js';
     import { VideoBg } from './engine/video-bg.js';
+    import { vanishDown, revealUp, vanishRight, revealLeft, setHidden, setVisible } from './engine/vanish.js';
 
-    // Start video immediately — don't wait for fonts
+    // Start video immediately
     const videoBgEl = document.getElementById('video-bg');
-    let videoBg;
     if (videoBgEl && videoBgEl.querySelectorAll('video').length > 0) {
-      videoBg = new VideoBg(videoBgEl);
-      videoBg.init();
+      const vbg = new VideoBg(videoBgEl);
+      vbg.init();
     }
 
     // Init slides engine once fonts are ready (with 3s timeout fallback)
-    const fontsReady = Promise.race([
-      document.fonts.ready,
-      new Promise(r => setTimeout(r, 3000))
-    ]);
+    await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 3000))]);
 
-    fontsReady.then(() => {
-      const engine = new SlidesEngine(config);
-      engine.init();
+    const engine = new SlidesEngine(config);
+    engine.init();
 
-      // Make all slide frames transparent to show video background
-      document.querySelectorAll('.slide-frame').forEach(frame => {
-        frame.classList.add('video-visible');
-      });
+    document.querySelectorAll('.slide-frame').forEach(f => f.classList.add('video-visible'));
 
-      // Brand logo animation
-      const brandLogo = document.getElementById('brand-logo');
-      const gsap = window.gsap;
+    const gsap = window.gsap;
 
-      // Collect erase targets per line (right-to-left order)
-      const lines = brandLogo.querySelectorAll('.brand-line');
-      const eraseTargets = [];
-      lines.forEach(line => {
-        const chars = Array.from(line.querySelectorAll('.brand-erase'));
-        chars.reverse(); // right-to-left
-        eraseTargets.push(chars);
-      });
+    // ═══════════════════════════════════════════
+    // REFS
+    // ═══════════════════════════════════════════
+    const brandLogo = document.getElementById('brand-logo');
+    const consultingLabel = document.getElementById('consulting-label');
+    const consultingInner = document.getElementById('consulting-inner');
+    const svcItems = document.querySelectorAll('#services-list .svc-item');
+    const argNewsLines = document.querySelectorAll('#argument-news .arg-line');
+    const argTailormade = document.querySelector('#argument-tailormade .vanish-mask');
+    const challengeLine1 = document.getElementById('challenge-line1');
+    const challengeLine2 = document.getElementById('challenge-line2');
+    const hamburgerMenu = document.getElementById('hamburger-menu');
+    const servicesPanel = document.getElementById('services-menu-panel');
 
-      // Measure and lock natural widths (GSAP can't tween to 'auto')
-      eraseTargets.forEach(lineChars => {
-        lineChars.forEach(ch => {
-          ch._naturalWidth = ch.offsetWidth;
-          gsap.set(ch, { width: ch.offsetWidth });
-        });
-      });
-
-      // Calculate scale ratio for shrink phase
-      const largeFontSize = parseFloat(getComputedStyle(brandLogo).fontSize);
-      const targetSmallPx = Math.max(28, Math.min(48, window.innerWidth * 0.04));
-      const smallScale = targetSmallPx / largeFontSize;
-
-      // Consulting label + services list
-      const consultingInner = document.getElementById('consulting-inner');
-      const servicesList = document.getElementById('services-list');
-      const svcInners = servicesList.querySelectorAll('.svc-inner');
-
-      // Services list starts hidden (items pushed up out of their overflow)
-      gsap.set(svcInners, { y: '110%', opacity: 0 });
-
-      let brandTimeline = null;
-      let isExpanded = true;
-
-      engine.onBeforeChange((toIndex, fromIndex) => {
-        if (toIndex > 0 && isExpanded) {
-          // Shrink: bora.now. → b.n.
-          isExpanded = false;
-          if (brandTimeline) brandTimeline.kill();
-          brandTimeline = gsap.timeline();
-
-          // Phase 1: Erase letters right-to-left, both lines simultaneously
-          const maxChars = Math.max(...eraseTargets.map(arr => arr.length));
-          for (let i = 0; i < maxChars; i++) {
-            eraseTargets.forEach(lineChars => {
-              if (lineChars[i]) {
-                brandTimeline.to(lineChars[i], {
-                  width: 0,
-                  opacity: 0,
-                  duration: 0.08,
-                  ease: 'power2.in',
-                }, i * 0.08);
-              }
-            });
-          }
-
-          // Phase 2: Scale down after erasure
-          const eraseEnd = maxChars * 0.08 + 0.08;
-          brandTimeline.to(brandLogo, {
-            scale: smallScale,
-            duration: 0.4,
-            ease: 'power3.inOut',
-          }, eraseEnd);
-
-          // Consulting: inner sinks down + container rises up (double mask)
-          const consultingLabel = document.getElementById('consulting-label');
-          brandTimeline.to(consultingInner, {
-            y: '110%',
-            duration: 0.35,
-            ease: 'power2.in',
-          }, 0);
-          brandTimeline.to(consultingLabel, {
-            y: -20,
-            duration: 0.35,
-            ease: 'power2.in',
-          }, 0);
-
-          // Services list: slide in from top, staggered
-          brandTimeline.to(svcInners, {
-            y: '0%',
-            opacity: 1,
-            duration: 0.45,
-            ease: 'power3.out',
-            stagger: 0.04,
-          }, 0.2);
-
-        } else if (toIndex === 0 && !isExpanded) {
-          // Expand: b.n. → bora.now.
-          isExpanded = true;
-          if (brandTimeline) brandTimeline.kill();
-          brandTimeline = gsap.timeline();
-
-          // Services list: slide out upward
-          brandTimeline.to(svcInners, {
-            y: '110%',
-            opacity: 0,
-            duration: 0.3,
-            ease: 'power2.in',
-            stagger: 0.02,
-          }, 0);
-
-          // Phase 1: Scale up
-          brandTimeline.to(brandLogo, {
-            scale: 1,
-            duration: 0.4,
-            ease: 'power3.inOut',
-          }, 0.15);
-
-          // Phase 2: Reveal letters left-to-right (reversed erase order)
-          const maxChars = Math.max(...eraseTargets.map(arr => arr.length));
-          for (let i = maxChars - 1; i >= 0; i--) {
-            eraseTargets.forEach(lineChars => {
-              if (lineChars[i]) {
-                brandTimeline.to(lineChars[i], {
-                  width: lineChars[i]._naturalWidth,
-                  opacity: 1,
-                  duration: 0.08,
-                  ease: 'power2.out',
-                }, 0.55 + (maxChars - 1 - i) * 0.08);
-              }
-            });
-          }
-
-          // Consulting: container drops back + inner rises
-          const consultingLabel2 = document.getElementById('consulting-label');
-          brandTimeline.to(consultingLabel2, {
-            y: 0,
-            duration: 0.35,
-            ease: 'power3.out',
-          }, 0.5);
-          brandTimeline.to(consultingInner, {
-            y: '0%',
-            duration: 0.35,
-            ease: 'power3.out',
-          }, 0.5);
-        }
-      });
-
-      const loader = document.getElementById('loader');
-      setTimeout(() => {
-        loader.classList.add('hide');
-        setTimeout(() => loader.remove(), 400);
-      }, 200);
+    // ═══════════════════════════════════════════
+    // BRAND LOGO SETUP
+    // ═══════════════════════════════════════════
+    const brandLines = brandLogo.querySelectorAll('.brand-line');
+    const eraseTargets = [];
+    brandLines.forEach(line => {
+      const chars = Array.from(line.querySelectorAll('.brand-erase'));
+      chars.reverse();
+      eraseTargets.push(chars);
     });
+    eraseTargets.forEach(lc => lc.forEach(ch => {
+      ch._naturalWidth = ch.offsetWidth;
+      gsap.set(ch, { width: ch.offsetWidth });
+    }));
+    const largeFontSize = parseFloat(getComputedStyle(brandLogo).fontSize);
+    const targetSmallPx = Math.max(28, Math.min(48, window.innerWidth * 0.04));
+    const smallScale = targetSmallPx / largeFontSize;
+    let brandExpanded = true;
+
+    function brandShrink(tl, start = 0) {
+      if (!brandExpanded) return;
+      brandExpanded = false;
+      const maxChars = Math.max(...eraseTargets.map(a => a.length));
+      for (let i = 0; i < maxChars; i++) {
+        eraseTargets.forEach(lc => {
+          if (lc[i]) tl.to(lc[i], { width: 0, opacity: 0, duration: 0.08, ease: 'power2.in' }, start + i * 0.08);
+        });
+      }
+      const eraseEnd = start + maxChars * 0.08 + 0.08;
+      tl.to(brandLogo, { scale: smallScale, duration: 0.4, ease: 'power3.inOut' }, eraseEnd);
+    }
+
+    function brandExpand(tl, start = 0) {
+      if (brandExpanded) return;
+      brandExpanded = true;
+      tl.to(brandLogo, { scale: 1, duration: 0.4, ease: 'power3.inOut' }, start);
+      const maxChars = Math.max(...eraseTargets.map(a => a.length));
+      for (let i = maxChars - 1; i >= 0; i--) {
+        eraseTargets.forEach(lc => {
+          if (lc[i]) tl.to(lc[i], { width: lc[i]._naturalWidth, opacity: 1, duration: 0.08, ease: 'power2.out' }, start + 0.4 + (maxChars - 1 - i) * 0.08);
+        });
+      }
+    }
+
+    // ═══════════════════════════════════════════
+    // SERVICES LIST SETUP
+    // ═══════════════════════════════════════════
+    setHidden(svcItems, 'down');
+    gsap.set(document.querySelectorAll('#services-list .svc-inner'), { opacity: 0 });
+
+    function servicesReveal(tl, start = 0) {
+      const inners = document.querySelectorAll('#services-list .svc-inner');
+      inners.forEach((inner, i) => {
+        tl.to(inner, { y: '0%', opacity: 1, duration: 0.45, ease: 'power3.out' }, start + i * 0.04);
+        tl.to(inner.parentElement, { y: 0, duration: 0.45, ease: 'power3.out' }, start + i * 0.04);
+      });
+    }
+
+    function servicesHideUp(tl, start = 0) {
+      const inners = document.querySelectorAll('#services-list .svc-inner');
+      inners.forEach((inner, i) => {
+        tl.to(inner, { y: '110%', opacity: 0, duration: 0.3, ease: 'power2.in' }, start + i * 0.02);
+      });
+    }
+
+    function servicesHideRight(tl, start = 0) {
+      const inners = document.querySelectorAll('#services-list .svc-inner');
+      inners.forEach((inner, i) => {
+        tl.to(inner, { x: '110%', opacity: 0, duration: 0.3, ease: 'power2.in' }, start + i * 0.03);
+      });
+    }
+
+    function servicesResetFromRight() {
+      const inners = document.querySelectorAll('#services-list .svc-inner');
+      inners.forEach(inner => { gsap.set(inner, { x: '0%' }); });
+    }
+
+    // ═══════════════════════════════════════════
+    // ARGUMENT NEWS SETUP (typewriter)
+    // ═══════════════════════════════════════════
+    setHidden(argNewsLines, 'down');
+
+    function argNewsTypewriter(tl, start = 0) {
+      const inners = document.querySelectorAll('#argument-news .vanish-inner');
+      // First reveal all lines up
+      inners.forEach((inner, i) => {
+        tl.to(inner, { y: '0%', duration: 0.01 }, start);
+      });
+      // Then typewriter each line
+      let t = start;
+      inners.forEach((inner, i) => {
+        const original = inner.innerHTML;
+        if (!inner._originalHTML) inner._originalHTML = original;
+        // Create a typing proxy
+        const textContent = inner.textContent;
+        const totalChars = textContent.length;
+        const typeDuration = Math.min(totalChars * 0.035, 1.2);
+
+        // Start with empty
+        tl.call(() => { inner.innerHTML = ''; }, null, t);
+        // Type character by character using proxy
+        const proxy = { p: 0 };
+        tl.to(proxy, {
+          p: 1,
+          duration: typeDuration,
+          ease: 'none',
+          onUpdate() {
+            const target = Math.floor(proxy.p * inner._originalHTML.length);
+            // Parse HTML properly
+            let result = '';
+            let textSeen = 0;
+            let inTag = false;
+            for (let j = 0; j < inner._originalHTML.length; j++) {
+              if (inner._originalHTML[j] === '<') inTag = true;
+              if (inTag) {
+                result += inner._originalHTML[j];
+                if (inner._originalHTML[j] === '>') inTag = false;
+                continue;
+              }
+              if (textSeen < Math.floor(proxy.p * totalChars)) {
+                result += inner._originalHTML[j];
+                textSeen++;
+              }
+            }
+            inner.innerHTML = result;
+          }
+        }, t);
+        t += typeDuration + 0.3; // pause between lines
+      });
+    }
+
+    function argNewsReset() {
+      const inners = document.querySelectorAll('#argument-news .vanish-inner');
+      inners.forEach(inner => {
+        if (inner._originalHTML) inner.innerHTML = inner._originalHTML;
+        gsap.set(inner, { y: '110%' });
+      });
+    }
+
+    // ═══════════════════════════════════════════
+    // ARGUMENT TAILORMADE SETUP (slot machine)
+    // ═══════════════════════════════════════════
+    const slotWords = [
+      'CMS', 'streaming service', 'mobile app', 'HR system',
+      'AI assistant', 'e-commerce', 'dashboard', 'booking platform',
+      'SaaS product', 'internal tool', 'chatbot', 'marketplace',
+      'analytics engine', 'payment system', 'API gateway'
+    ];
+    const slotTrack = document.querySelector('.slot-track');
+    const slotMachine = document.querySelector('.slot-machine');
+    let slotInterval = null;
+    let slotIndex = 0;
+
+    // Populate slot words
+    slotWords.forEach(w => {
+      const span = document.createElement('span');
+      span.className = 'slot-word';
+      span.textContent = w;
+      slotTrack.appendChild(span);
+    });
+
+    // Set slot machine height to one word
+    setHidden([argTailormade], 'down');
+
+    function startSlot() {
+      if (slotInterval) return;
+      const wordH = slotTrack.querySelector('.slot-word').offsetHeight;
+      gsap.set(slotMachine, { height: wordH });
+      // Start at random position
+      slotIndex = Math.floor(Math.random() * slotWords.length);
+      gsap.set(slotTrack, { y: -slotIndex * wordH });
+
+      slotInterval = setInterval(() => {
+        slotIndex = (slotIndex + 1) % slotWords.length;
+        const wordH = slotTrack.querySelector('.slot-word').offsetHeight;
+        gsap.to(slotTrack, {
+          y: -slotIndex * wordH,
+          duration: 0.3,
+          ease: 'power2.inOut',
+        });
+      }, 750);
+    }
+
+    function stopSlot() {
+      if (slotInterval) { clearInterval(slotInterval); slotInterval = null; }
+    }
+
+    // ═══════════════════════════════════════════
+    // CHALLENGE SETUP (letter-by-letter reveal)
+    // ═══════════════════════════════════════════
+    const challengeText1 = 'bring us a';
+    const challengeText2 = 'challenge';
+    const challengeBang = '!';
+
+    function buildChallengeLetters() {
+      challengeLine1.innerHTML = challengeText1.split('').map(ch =>
+        ch === ' ' ? ' ' : `<span class="ch-letter">${ch}</span>`
+      ).join('');
+      challengeLine2.innerHTML = challengeText2.split('').map(ch =>
+        `<span class="ch-letter">${ch}</span>`
+      ).join('') + `<span class="ch-letter ch-bang">${challengeBang}</span>`;
+    }
+    buildChallengeLetters();
+
+    function challengeReveal(tl, start = 0) {
+      const line1Letters = challengeLine1.querySelectorAll('.ch-letter');
+      const line2Letters = challengeLine2.querySelectorAll('.ch-letter:not(.ch-bang)');
+      const bang = challengeLine2.querySelector('.ch-bang');
+      let t = start;
+
+      // Line 1: typewriter
+      line1Letters.forEach((letter, i) => {
+        tl.to(letter, { opacity: 1, duration: 0.03, ease: 'none' }, t + i * 0.04);
+      });
+      t += line1Letters.length * 0.04 + 0.15;
+
+      // Line 2: typewriter (without bang)
+      line2Letters.forEach((letter, i) => {
+        tl.to(letter, { opacity: 1, duration: 0.03, ease: 'none' }, t + i * 0.04);
+      });
+      t += line2Letters.length * 0.04;
+
+      // Pause before bang
+      t += 0.6;
+      tl.to(bang, { opacity: 1, duration: 0.05, ease: 'none' }, t);
+    }
+
+    function challengeHide() {
+      gsap.set(document.querySelectorAll('#challenge-text .ch-letter'), { opacity: 0 });
+    }
+
+    // ═══════════════════════════════════════════
+    // HAMBURGER MENU
+    // ═══════════════════════════════════════════
+    hamburgerMenu.addEventListener('click', () => {
+      hamburgerMenu.classList.toggle('open');
+      servicesPanel.classList.toggle('open');
+    });
+
+    function showHamburger() {
+      hamburgerMenu.classList.add('visible');
+    }
+    function hideHamburger() {
+      hamburgerMenu.classList.remove('visible', 'open');
+      servicesPanel.classList.remove('open');
+    }
+
+    // ═══════════════════════════════════════════
+    // TRANSITION MAP
+    // ═══════════════════════════════════════════
+    let activeTl = null;
+
+    const transitions = {
+      // Slide 0 → 1: brand shrink + consulting vanish + services reveal
+      '0→1': (tl) => {
+        brandShrink(tl, 0);
+        tl.to(consultingInner, { y: '110%', duration: 0.35, ease: 'power2.in' }, 0);
+        tl.to(consultingLabel, { y: -20, duration: 0.35, ease: 'power2.in' }, 0);
+        servicesReveal(tl, 0.2);
+      },
+
+      // Slide 1 → 0: reverse
+      '1→0': (tl) => {
+        hideHamburger();
+        servicesHideUp(tl, 0);
+        brandExpand(tl, 0.15);
+        tl.to(consultingLabel, { y: 0, duration: 0.35, ease: 'power3.out' }, 0.5);
+        tl.to(consultingInner, { y: '0%', duration: 0.35, ease: 'power3.out' }, 0.5);
+      },
+
+      // Slide 1 → 2: services vanish right → hamburger + argument news typewriter
+      '1→2': (tl) => {
+        servicesHideRight(tl, 0);
+        tl.call(() => { showHamburger(); }, null, 0.3);
+        argNewsTypewriter(tl, 0.3);
+      },
+
+      // Slide 2 → 1: argument news vanish down + hide hamburger + services reveal
+      '2→1': (tl) => {
+        hideHamburger();
+        vanishDown(tl, Array.from(argNewsLines), 0, { stagger: 0.03 });
+        tl.call(() => { servicesResetFromRight(); argNewsReset(); }, null, 0.35);
+        servicesReveal(tl, 0.35);
+      },
+
+      // Slide 2 → 3: argument news vanish down + tailormade reveal + start slot
+      '2→3': (tl) => {
+        vanishDown(tl, Array.from(argNewsLines), 0, { stagger: 0.03 });
+        revealUp(tl, [argTailormade], 0.3);
+        tl.call(() => { startSlot(); argNewsReset(); }, null, 0.5);
+      },
+
+      // Slide 3 → 2: tailormade vanish + argument news typewriter
+      '3→2': (tl) => {
+        stopSlot();
+        vanishDown(tl, [argTailormade], 0);
+        tl.call(() => { setHidden([argTailormade], 'down'); }, null, 0.35);
+        argNewsTypewriter(tl, 0.35);
+      },
+
+      // Slide 3 → 4: tailormade vanish + challenge reveal + brand expand
+      '3→4': (tl) => {
+        stopSlot();
+        vanishDown(tl, [argTailormade], 0);
+        challengeReveal(tl, 0.3);
+        brandExpand(tl, 0.5);
+        tl.call(() => { setHidden([argTailormade], 'down'); }, null, 0.35);
+      },
+
+      // Slide 4 → 3: challenge hide + brand shrink + tailormade reveal + start slot
+      '4→3': (tl) => {
+        challengeHide();
+        brandShrink(tl, 0);
+        revealUp(tl, [argTailormade], 0.3);
+        tl.call(() => { startSlot(); }, null, 0.5);
+      },
+    };
+
+    engine.onBeforeChange((toIndex, fromIndex) => {
+      if (activeTl) activeTl.kill();
+      activeTl = gsap.timeline();
+      const key = `${fromIndex}→${toIndex}`;
+      if (transitions[key]) transitions[key](activeTl);
+    });
+
+    // ═══════════════════════════════════════════
+    // LOADER
+    // ═══════════════════════════════════════════
+    const loader = document.getElementById('loader');
+    setTimeout(() => {
+      loader.classList.add('hide');
+      setTimeout(() => loader.remove(), 400);
+    }, 200);
   </script>
+
+  <!-- SpecLens overlay -->
+  <script src="https://speclens.did.lu/overlay/spec-lens.js"
+          data-app="boranow"
+          data-screen="landing"
+          data-token="boranow-mnqrtzrq"
+          data-author="Manu"></script>
 </body>
 </html>
